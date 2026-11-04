@@ -71,7 +71,7 @@ export default function Home() {
               <GraduationCap className="h-6 w-6" />
             </div>
             <div>
-              <span className="font-bold text-lg tracking-tight">Vidya Classes</span>
+              <span className="font-bold text-lg tracking-tight">STA Classes</span>
               <span className="hidden sm:inline-block ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
                 PW Style Platform
               </span>
@@ -95,7 +95,7 @@ export default function Home() {
             🚀 Phase 1: Setup & Architecture Completed
           </Badge>
           <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-foreground">
-            Empowering Every Student with <span className="text-primary">Vidya Classes</span>
+            Empowering Every Student with <span className="text-primary">STA Classes</span>
           </h1>
           <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-2xl">
             A comprehensive, mobile-first coaching platform engineered with Next.js 14, Tailwind CSS, 
@@ -175,7 +175,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t py-8 bg-background">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>© {new Date().getFullYear()} Vidya Classes. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} STA Classes. All rights reserved.</p>
           <div className="flex items-center gap-4">
             <span>Powered by Next.js 14 & Supabase</span>
             <span>•</span>

@@ -1,6 +1,6 @@
-# Vidya Classes - Online Coaching Platform (Physics Wallah Architecture)
+# STA Classes - Online Coaching Platform (Physics Wallah Architecture)
 
-> **Platform Name:** Vidya Classes  
+> **Platform Name:** STA Classes  
 > **Brand Color:** `#5B3DF5` (Modern Ed-Tech Purple)  
 > **Design Philosophy:** Mobile-first, rounded-2xl cards, Poppins font, Capacitor-ready for Android APK.
 

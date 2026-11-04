@@ -10,8 +10,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Vidya Classes | Online Coaching & Learning Platform",
-  description: "Next-gen PW-style online learning platform for Vidya Classes students & teachers.",
+  title: "STA Classes | Online Coaching & Learning Platform",
+  description: "Next-gen PW-style online learning platform for STA Classes students & teachers.",
 };
 
 export default function RootLayout({
