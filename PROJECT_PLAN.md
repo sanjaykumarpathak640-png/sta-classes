@@ -1,4 +1,4 @@
-# STA Classes - Online Coaching Platform (Physics Wallah Architecture)
+# STA Classes - Online Coaching Platform Architecture
 
 > **Platform Name:** STA Classes  
 > **Brand Color:** `#5B3DF5` (Modern Ed-Tech Purple)  
@@ -48,36 +48,43 @@
 
 ---
 
-### ⏳ Phase 2: Database Schema & Supabase RLS
-- [ ] Write `supabase/schema.sql` covering 16 tables:
-  - `profiles`, `batches`, `enrollments`, `subjects`, `chapters`, `lectures`, `notes`
-  - `live_classes`, `tests`, `questions`, `test_attempts`, `doubts`, `attendance`, `fees`, `notices`, `lecture_progress`
-- [ ] Auth trigger to automatically populate `profiles` on user signup.
-- [ ] Row Level Security (RLS) policies on all tables with `is_admin()` helper.
-- [ ] Storage buckets: `avatars`, `notes`, `doubt-images`, `thumbnails`.
-- [ ] Generate TypeScript database definitions in `src/types/database.ts`.
+### ✅ Phase 2: Database Schema & Supabase RLS (COMPLETED)
+- [x] Generated `supabase/schema.sql` covering 26 tables:
+  - Core Coaching: `profiles`, `batches`, `batch_features`, `enrollments`, `subjects`, `chapters`, `lectures`, `notes`, `live_classes`, `tests`, `questions`, `test_attempts`, `doubts`, `attendance`, `fees`, `notices`, `lecture_progress`.
+  - Website CMS: `site_settings`, `hero_slides`, `stats`, `faculty`, `toppers`, `testimonials`, `faqs`, `gallery_images`, `announcements_banner`, `section_settings`.
+- [x] Trigger `on_auth_user_created` for automatic student profile creation on signup.
+- [x] Function `is_admin()` for role-based security checks.
+- [x] Row Level Security (RLS) on all tables with Admin Full Access and Public Read where needed.
+- [x] Comprehensive initial seed data for immediate out-of-the-box readiness.
+- [x] TypeScript database definitions in `src/types/database.ts`.
 
 ---
 
-### ⏳ Phase 3: Login, Signup, Roles & Landing Page
+### ⏳ Phase 3: Login, Signup, Roles & Student Landing Pages
 - [ ] `/login` and `/signup` with role-based routing and approval banner (`is_approved = true`).
 - [ ] Forgot password flow.
 - [ ] Next.js middleware protecting `/admin/*` and `/student/*`.
-- [ ] Public landing page (`/`): Hero, active batches, faculty intro, testimonials, contact via WhatsApp/Map.
+- [ ] Dynamic landing page connected to Supabase CMS.
 
 ---
 
-### ⏳ Phase 4: Admin Management Panel
-- [ ] Admin layout with responsive collapsible sidebar (`Sheet` on mobile).
-- [ ] Dashboard metrics: Total students, active batches, pending approvals, revenue, pending fees.
-- [ ] Students table: Search, filter, approve/reject, manual batch enrollment.
-- [ ] Batch curriculum manager: Subject -> Chapter -> Lectures & Notes (reordering).
-- [ ] Video URL parser for YouTube unlisted links.
-- [ ] Live class scheduler & batch notice broadcaster.
+### ✅ Phase 4: Admin Management Panel (COMPLETED)
+- [x] Master Admin Control Deck at `/admin` with responsive sidebar (`Sheet` on mobile).
+- [x] Dashboard: Total students, active batches, pending approvals, fees pending, today's live classes, with Recharts analytics.
+- [x] Website Editor CMS: Full visual customizer for branding, hero, faculty, toppers, reviews, FAQs, gallery, and section show/hide toggles.
+- [x] Students Directory: List, search, filter by batch, 1-click approve/revoke, block/unblock, and full academic dossier report.
+- [x] Curriculum Explorer: Batches -> Subjects -> Chapters -> Lectures & Notes with free preview toggles and direct links.
+- [x] Live Class Scheduler: Timetable management with Google Meet & Zoom meeting link dispatch.
+- [x] Examination Engine: Test setup with duration, total marks, negative marking, and CSV bulk question import.
+- [x] Photo Doubts Inbox: Filter pending/answered questions with student photo review and reply dispatch.
+- [x] Attendance Register: Daily batch register with 1-click "Mark All Present/Absent" shortcuts.
+- [x] Fees Ledger: Installment tracking, cash/UPI receipt recording, and 1-click WhatsApp reminder generator.
+- [x] Notice Board: Broadcast circulars with sticky pin support.
+- [x] Instant server-side cache revalidation (`revalidatePath`).
 
 ---
 
-### ⏳ Phase 5: Student Mobile App Experience (PW-Style)
+### ⏳ Phase 5: Student Mobile App Experience
 - [ ] Mobile app layout with bottom navigation bar: **Home**, **My Batches**, **Tests**, **Doubts**, **Profile**.
 - [ ] Home: Continue watching card, upcoming live class banner with countdown, latest notices.
 - [ ] Curriculum viewer: Subjects tabs -> Chapters -> Lecture player with progress tracking.
