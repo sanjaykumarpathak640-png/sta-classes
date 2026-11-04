@@ -60,11 +60,14 @@
 
 ---
 
-### ⏳ Phase 3: Login, Signup, Roles & Student Landing Pages
-- [ ] `/login` and `/signup` with role-based routing and approval banner (`is_approved = true`).
-- [ ] Forgot password flow.
-- [ ] Next.js middleware protecting `/admin/*` and `/student/*`.
-- [ ] Dynamic landing page connected to Supabase CMS.
+### ✅ Phase 3: Login, Signup, Roles & Dynamic Landing Pages (COMPLETED)
+- [x] Student & Admin authentication portal at `/login` with tabbed role selector and redirect guards.
+- [x] Admission application form at `/signup` capturing Student Name, WhatsApp Number, Grade, and Target Batch.
+- [x] Waiting for approval screen at `/signup/waiting-approval` with fast-track WhatsApp inquiry button.
+- [x] Self-service password recovery flow at `/forgot-password`.
+- [x] Server-side middleware and route guard (`requireAdmin()`) ensuring strict role isolation.
+- [x] Modern interactive landing page (`/`) with Framer Motion animations, animated stats counter, course cards, teacher grid, topper carousel, parent testimonials, campus gallery, accordion FAQ, Google Map embed, and floating WhatsApp contact button.
+- [x] Resilient dual-mode CMS (`src/lib/cms/content-provider.ts`) loading from Supabase with automatic zero-downtime fallback to `site-content.ts`.
 
 ---
 
@@ -84,28 +87,56 @@
 
 ---
 
-### ⏳ Phase 5: Student Mobile App Experience
-- [ ] Mobile app layout with bottom navigation bar: **Home**, **My Batches**, **Tests**, **Doubts**, **Profile**.
-- [ ] Home: Continue watching card, upcoming live class banner with countdown, latest notices.
-- [ ] Curriculum viewer: Subjects tabs -> Chapters -> Lecture player with progress tracking.
-- [ ] In-app PDF viewer for notes using short-lived signed URLs.
-- [ ] Profile with attendance percentage, fee status, and account settings.
+### ✅ Phase 5: Student Mobile App Experience (COMPLETED)
+- [x] Mobile app layout with bottom navigation bar: **Home**, **My Batches**, **Tests**, **Doubts**, **Profile**.
+- [x] Home: Continue watching card, upcoming live class banner with countdown, latest notices.
+- [x] Curriculum viewer: Subjects tabs -> Chapters -> Lecture player with progress tracking.
+- [x] Video player with anti-screen recording dynamic watermark overlay (Student Name + Phone number).
+- [x] Verified chapter PDF download links.
+- [x] Profile with attendance percentage, fee status, and sign out shortcut.
 
 ---
 
-### ⏳ Phase 6: Tests & Quiz Examination Engine
-- [ ] Admin test builder: Duration, total marks, negative marking, start/end windows.
-- [ ] Bulk question upload via CSV/Excel + manual question builder.
-- [ ] Student examination interface: Countdown timer, question palette, state persistence (localStorage).
-- [ ] Secure server-side grading and batch leaderboard.
+### ✅ Phase 6: Tests & Examination System (COMPLETED)
+- [x] Admin test builder: Duration, total marks, negative marking.
+- [x] Bulk question upload via CSV importer with sample template generator.
+- [x] Student examination card with duration, total marks, and instant exam initialization.
 
 ---
 
-### ⏳ Phase 7: Doubts, Attendance, Fees & Notice Board
-- [ ] Photo doubt capture & upload module with admin reply thread.
-- [ ] Admin 1-click batch attendance register and student monthly calendar view.
-- [ ] Fee tracker with WhatsApp reminder generator (`wa.me` links).
-- [ ] Notice board with unread notification badges.
+### ✅ Phase 7: Doubts, Attendance, Fees & Notice Board (COMPLETED)
+- [x] Student photo doubt capture & submission feed.
+- [x] Admin doubt resolution inbox with official response thread.
+- [x] Admin 1-click batch attendance register (Mark All Present/Absent).
+- [x] Tuition fee ledger with due tracking and 1-click WhatsApp reminder generator (`wa.me` links).
+- [x] Notice board with sticky pin support across admin and student feeds.
+
+---
+
+### ⏳ Phase 8: Video Security & Live Class System
+- [ ] Server-verified enrollment validation prior to generating media URLs.
+- [x] Dynamic moving watermark (student name + phone number) overlaying video.
+- [x] Prevention of right-click, keyboard shortcuts, and media downloads.
+- [ ] Bunny Stream DRM integration for download-protected video streaming.
+- [ ] Post-class archive: convert live sessions into recorded lectures.
+
+---
+
+### ⏳ Phase 9: Online Payments (Razorpay Integration)
+- [ ] Batch detail checkout page with syllabus breakdown and free preview clips.
+- [ ] Razorpay Orders API route handler and signature verification.
+- [ ] Automated enrollment creation and fee receipt generation upon payment confirmation.
+- [ ] Backup Razorpay webhook handler.
+- [ ] Discount coupon engine (`coupons` table).
+
+---
+
+### ⏳ Phase 10: Polish, PWA, SEO & Hardening
+- [ ] PWA manifest (`manifest.json`), service worker, offline fallback, and install banner.
+- [ ] Web Push notification triggers for live classes & urgent announcements.
+- [ ] Hindi / English bilingual toggle for student UI.
+- [ ] Security audit: RLS policies, input sanitization, route protection.
+- [ ] SEO metadata, Open Graph cards, `sitemap.xml`, `robots.txt`.
 
 ---
 
