@@ -16,7 +16,9 @@ import {
   Phone,
   Calendar,
   CreditCard,
-  Award
+  Award,
+  KeyRound,
+  Trash2
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -202,6 +204,25 @@ export default function StudentsManagementPage() {
       title: nextVal ? "Student Blocked" : "Student Unblocked",
       description: `${student.name} access status updated.`,
       variant: nextVal ? "destructive" : "default",
+    });
+  };
+
+  // RESET PASSWORD
+  const handleResetPassword = (student: StudentItem) => {
+    toast({
+      title: "Password Reset Triggered",
+      description: `A secure password reset link has been dispatched to ${student.name} (${student.phone}).`,
+    });
+  };
+
+  // DELETE STUDENT
+  const handleDeleteStudent = (student: StudentItem) => {
+    if (!window.confirm(`Permanently remove ${student.name} from records? This action cannot be undone.`)) return;
+    setStudents((prev) => prev.filter((s) => s.id !== student.id));
+    toast({
+      title: "Student Deleted",
+      description: `${student.name} has been removed from platform records.`,
+      variant: "destructive",
     });
   };
 
@@ -400,13 +421,21 @@ export default function StudentsManagementPage() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    className={`rounded-xl text-xs h-9 px-2.5 ${
-                      st.isBlocked ? "text-emerald-600" : "text-destructive hover:bg-destructive/10"
-                    }`}
-                    onClick={() => handleToggleBlock(st)}
-                    title={st.isBlocked ? "Unblock" : "Block"}
+                    className="h-9 w-9 p-0 text-muted-foreground hover:text-foreground rounded-xl"
+                    onClick={() => handleResetPassword(st)}
+                    title="Send Password Reset Link"
                   >
-                    <Ban className="h-4 w-4" />
+                    <KeyRound className="h-4 w-4" />
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="h-9 w-9 p-0 text-destructive hover:bg-destructive/10 rounded-xl"
+                    onClick={() => handleDeleteStudent(st)}
+                    title="Delete Student"
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>

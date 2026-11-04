@@ -8,7 +8,9 @@ import {
   Edit3, 
   Video, 
   FileText, 
-  ChevronRight, 
+  ChevronRight,
+  ChevronUp,
+  ChevronDown, 
   Eye, 
   Sparkles, 
   Clock, 
@@ -290,6 +292,15 @@ export default function BatchesCurriculumPage() {
     toast({ title: "PDF Note Added!", description: newNote.title });
   };
 
+  const reorderList = <T,>(list: T[], index: number, direction: "up" | "down", setter: (items: T[]) => void) => {
+    const targetIdx = direction === "up" ? index - 1 : index + 1;
+    if (targetIdx < 0 || targetIdx >= list.length) return;
+    const copy = [...list];
+    const [moved] = copy.splice(index, 1);
+    copy.splice(targetIdx, 0, moved);
+    setter(copy);
+  };
+
   const currentSubjects = subjects.filter((s) => s.batchId === selectedBatch?.id);
   const currentChapters = chapters.filter((c) => c.subjectId === selectedSubject?.id);
   const currentLectures = lectures.filter((l) => l.chapterId === selectedChapter?.id);
@@ -511,9 +522,29 @@ export default function BatchesCurriculumPage() {
                     <div className="font-semibold text-foreground line-clamp-2">{lec.title}</div>
 
                     <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
-                      <a href={lec.videoUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1">
-                        <Video className="h-3 w-3" /> Test Link
-                      </a>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5 text-muted-foreground hover:text-foreground"
+                          title="Move Up"
+                          onClick={() => reorderList(lectures, lectures.findIndex(l => l.id === lec.id), "up", setLectures)}
+                        >
+                          <ChevronUp className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5 text-muted-foreground hover:text-foreground"
+                          title="Move Down"
+                          onClick={() => reorderList(lectures, lectures.findIndex(l => l.id === lec.id), "down", setLectures)}
+                        >
+                          <ChevronDown className="h-3 w-3" />
+                        </Button>
+                        <a href={lec.videoUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1 ml-1">
+                          <Video className="h-3 w-3" /> Test Link
+                        </a>
+                      </div>
                       <Button
                         variant="ghost"
                         size="icon"

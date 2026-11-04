@@ -78,16 +78,26 @@ export function Navbar({ settings }: NavbarProps) {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden sm:flex items-center gap-2.5">
+          <div className="hidden sm:flex items-center gap-2">
             <ThemeToggle />
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="rounded-xl hover:bg-muted font-medium text-xs px-3"
+            >
+              <Link href="/login">
+                Student Login
+              </Link>
+            </Button>
             <Button
               asChild
               variant="outline"
               size="sm"
-              className="rounded-xl border-border hover:bg-muted font-medium text-xs px-3.5"
+              className="rounded-xl border-border hover:bg-muted font-medium text-xs px-3"
             >
               <Link href="/admin">
-                <ShieldCheck className="h-3.5 w-3.5 mr-1 text-primary" /> Admin Panel
+                <ShieldCheck className="h-3.5 w-3.5 mr-1 text-primary" /> Admin
               </Link>
             </Button>
             <Button
@@ -169,9 +179,19 @@ export function Navbar({ settings }: NavbarProps) {
                     </Link>
                   ))}
                   <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors flex items-center justify-between mt-2"
+                  >
+                    <span className="flex items-center gap-2">
+                      <GraduationCap className="h-4 w-4 text-primary" /> Student Portal
+                    </span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                  <Link
                     href="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-primary hover:bg-primary/10 transition-colors flex items-center justify-between mt-2"
+                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-primary hover:bg-primary/10 transition-colors flex items-center justify-between"
                   >
                     <span className="flex items-center gap-2">
                       <ShieldCheck className="h-4 w-4" /> Admin Portal

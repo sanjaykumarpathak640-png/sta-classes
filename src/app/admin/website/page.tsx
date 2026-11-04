@@ -185,6 +185,18 @@ export default function WebsiteEditorPage() {
     toast({ title: "FAQ Deleted", description: "FAQ question removed." });
   };
 
+  const handleDeleteStat = async (idx: number) => {
+    if (!window.confirm("Delete this metric counter?")) return;
+    setStatsList((prev) => prev.filter((_, i) => i !== idx));
+    toast({ title: "Stat Deleted", description: "Counter removed from landing page." });
+  };
+
+  const handleDeleteTestimonial = async (id: string, name: string) => {
+    if (!window.confirm(`Delete review from ${name}?`)) return;
+    setTestimonialsList((prev) => prev.filter((t) => t.id !== id));
+    toast({ title: "Review Deleted", description: `Testimonial from ${name} removed.` });
+  };
+
   const handleDeleteGallery = async (id: string) => {
     if (!window.confirm("Delete this gallery image?")) return;
     setGalleryList((prev) => prev.filter((g) => g.id !== id));
@@ -225,6 +237,9 @@ export default function WebsiteEditorPage() {
           <TabsTrigger value="hero" className="rounded-xl text-xs font-semibold py-2 px-3">
             Hero Section
           </TabsTrigger>
+          <TabsTrigger value="stats" className="rounded-xl text-xs font-semibold py-2 px-3">
+            Stats Counters ({statsList.length})
+          </TabsTrigger>
           <TabsTrigger value="visibility" className="rounded-xl text-xs font-semibold py-2 px-3">
             Section Show/Hide
           </TabsTrigger>
@@ -233,6 +248,9 @@ export default function WebsiteEditorPage() {
           </TabsTrigger>
           <TabsTrigger value="toppers" className="rounded-xl text-xs font-semibold py-2 px-3">
             Toppers ({toppersList.length})
+          </TabsTrigger>
+          <TabsTrigger value="testimonials" className="rounded-xl text-xs font-semibold py-2 px-3">
+            Testimonials ({testimonialsList.length})
           </TabsTrigger>
           <TabsTrigger value="faqs" className="rounded-xl text-xs font-semibold py-2 px-3">
             FAQs ({faqsList.length})
@@ -867,6 +885,216 @@ export default function WebsiteEditorPage() {
                     }}
                     className="rounded-lg h-7 text-[11px] font-mono"
                   />
+                </div>
+              ))}
+            </div>
+          </Card>
+        </TabsContent>
+        {/* STATS TAB */}
+        <TabsContent value="stats">
+          <Card className="rounded-3xl border border-border/80 shadow-sm p-6 bg-card space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-bold">Stats Counters</CardTitle>
+                <CardDescription className="text-xs">
+                  Numbers that count up as visitors scroll through the landing page.
+                </CardDescription>
+              </div>
+              <Button
+                size="sm"
+                className="rounded-xl text-xs gap-1.5"
+                onClick={() => {
+                  const newStat = {
+                    value: 100,
+                    suffix: "+",
+                    decimals: 0,
+                    label: "New Metric",
+                    description: "Metric description",
+                  };
+                  setStatsList([...statsList, newStat]);
+                  toast({ title: "Metric Added" });
+                }}
+              >
+                <Plus className="h-3.5 w-3.5" /> Add Metric
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {statsList.map((stat, idx) => (
+                <div key={idx} className="p-4 rounded-2xl border border-border/80 bg-muted/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-xs uppercase text-muted-foreground">Stat #{idx + 1}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 text-destructive hover:bg-destructive/10 rounded-lg"
+                      onClick={() => handleDeleteStat(idx)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <Label className="text-[10px]">Value</Label>
+                      <Input
+                        type="number"
+                        value={stat.value}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setStatsList((prev) => prev.map((s, i) => i === idx ? { ...s, value: val } : s));
+                        }}
+                        className="rounded-lg h-8 text-xs font-bold"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[10px]">Suffix (+, %)</Label>
+                      <Input
+                        value={stat.suffix}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setStatsList((prev) => prev.map((s, i) => i === idx ? { ...s, suffix: val } : s));
+                        }}
+                        className="rounded-lg h-8 text-xs font-mono"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[10px]">Decimals</Label>
+                      <Input
+                        type="number"
+                        value={stat.decimals || 0}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setStatsList((prev) => prev.map((s, i) => i === idx ? { ...s, decimals: val } : s));
+                        }}
+                        className="rounded-lg h-8 text-xs"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-1.5 text-xs">
+                    <div>
+                      <Label className="text-[10px]">Label</Label>
+                      <Input
+                        value={stat.label}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setStatsList((prev) => prev.map((s, i) => i === idx ? { ...s, label: val } : s));
+                        }}
+                        className="rounded-lg h-8 text-xs font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[10px]">Subtext Description</Label>
+                      <Input
+                        value={stat.description}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setStatsList((prev) => prev.map((s, i) => i === idx ? { ...s, description: val } : s));
+                        }}
+                        className="rounded-lg h-8 text-xs text-muted-foreground"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </TabsContent>
+
+        {/* TESTIMONIALS TAB */}
+        <TabsContent value="testimonials">
+          <Card className="rounded-3xl border border-border/80 shadow-sm p-6 bg-card space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-lg font-bold">Parent & Student Reviews</CardTitle>
+                <CardDescription className="text-xs">
+                  Authentic reviews displayed in the Testimonials section.
+                </CardDescription>
+              </div>
+              <Button
+                size="sm"
+                className="rounded-xl text-xs gap-1.5"
+                onClick={() => {
+                  const newReview = {
+                    id: `tm-${Date.now()}`,
+                    name: "Parent Name",
+                    role: "Parent of Class 10 Student",
+                    rating: 5,
+                    quote: "Excellent academic standard and caring teachers.",
+                    batch: "Class 10 Board Batch",
+                    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=200&q=80",
+                  };
+                  setTestimonialsList([...testimonialsList, newReview]);
+                  toast({ title: "Draft Review Added" });
+                }}
+              >
+                <Plus className="h-3.5 w-3.5" /> Add Review
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {testimonialsList.map((tm) => (
+                <div key={tm.id} className="p-4 rounded-2xl border border-border/80 bg-muted/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-sm text-foreground">{tm.name}</span>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:bg-destructive/10 rounded-xl"
+                      onClick={() => handleDeleteTestimonial(tm.id, tm.name)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-xs">
+                    <div>
+                      <Label className="text-[10px]">Author Name</Label>
+                      <Input
+                        value={tm.name}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setTestimonialsList((prev) => prev.map((x) => x.id === tm.id ? { ...x, name: val } : x));
+                        }}
+                        className="rounded-lg h-8 text-xs font-semibold"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[10px]">Role / Relation</Label>
+                      <Input
+                        value={tm.role}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setTestimonialsList((prev) => prev.map((x) => x.id === tm.id ? { ...x, role: val } : x));
+                        }}
+                        className="rounded-lg h-8 text-xs"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-[10px]">Rating (1-5)</Label>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={5}
+                        value={tm.rating}
+                        onChange={(e) => {
+                          const val = Number(e.target.value);
+                          setTestimonialsList((prev) => prev.map((x) => x.id === tm.id ? { ...x, rating: val } : x));
+                        }}
+                        className="rounded-lg h-8 text-xs font-bold text-amber-500"
+                      />
+                    </div>
+                  </div>
+                  <div className="text-xs">
+                    <Label className="text-[10px]">Review Quote</Label>
+                    <Textarea
+                      rows={2}
+                      value={tm.quote}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setTestimonialsList((prev) => prev.map((x) => x.id === tm.id ? { ...x, quote: val } : x));
+                      }}
+                      className="rounded-lg text-xs resize-none"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
