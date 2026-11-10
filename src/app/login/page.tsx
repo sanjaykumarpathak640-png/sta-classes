@@ -39,13 +39,22 @@ function LoginFormContent() {
     setTimeout(() => {
       setLoading(false);
       if (role === "admin") {
-        toast({ title: "Welcome, Admin!", description: "Accessing master control deck..." });
+        // Set admin master auth cookie & storage
+        document.cookie = "sta_admin_auth=true; path=/; max-age=2592000; SameSite=Lax";
+        try {
+          localStorage.setItem("sta_admin_authenticated", "true");
+        } catch {}
+
+        toast({ 
+          title: "Welcome, Master Admin!", 
+          description: "Accessing STA Classes Control Deck with full privileges." 
+        });
         router.push("/admin");
       } else {
-        toast({ title: "Welcome back!", description: "Loading student portal..." });
+        toast({ title: "Welcome back!", description: "Loading student learning portal..." });
         router.push("/student");
       }
-    }, 700);
+    }, 600);
   };
 
   return (
@@ -102,7 +111,9 @@ function LoginFormContent() {
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-xs font-semibold">Password</Label>
+              <Label htmlFor="password" className="text-xs font-semibold">
+                {role === "admin" ? "Master Admin Password" : "Password"}
+              </Label>
               <Link href="/forgot-password" className="text-[11px] text-primary font-medium hover:underline">
                 Forgot password?
               </Link>
@@ -111,11 +122,16 @@ function LoginFormContent() {
               id="password"
               type="password"
               required
-              placeholder="••••••••"
+              placeholder={role === "admin" ? "Enter admin password (e.g. admin123)" : "••••••••"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-xl text-xs font-mono"
             />
+            {role === "admin" && (
+              <p className="text-[11px] text-primary bg-primary/5 p-2 rounded-lg border border-primary/20">
+                🔑 Master Admin Password: <code className="font-bold">admin123</code> (Settings me change kar sakte hain)
+              </p>
+            )}
           </div>
 
           <Button

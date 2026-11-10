@@ -23,12 +23,17 @@ import {
   GraduationCap,
   Sparkles,
   ShieldCheck,
-  Bell
+  Bell,
+  Bot,
+  MessageSquare,
+  Copy,
+  Check
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -95,6 +100,75 @@ export default function StudentPortalPage() {
       title: "Doubt Submitted to Faculty!",
       description: "Teacher will review and answer in your doubt inbox.",
     });
+  };
+
+  // AI Doubt Solver State
+  const [doubtSubTab, setDoubtSubTab] = React.useState<"ai" | "faculty">("ai");
+  const [aiInput, setAiInput] = React.useState("");
+  const [aiLoading, setAiLoading] = React.useState(false);
+  const [aiMessages, setAiMessages] = React.useState<Array<{
+    id: string;
+    sender: "user" | "ai";
+    text: string;
+    time: string;
+  }>>([
+    {
+      id: "welcome-1",
+      sender: "ai",
+      text: "👋 Namaste! Main STA Classes ka AI Study Mentor hu. Class 4 se 12 tak Physics, Chemistry, Maths, Biology ya English me koi bhi doubt poocho — main step-by-step aasan bhasha me samjhaunga!",
+      time: "Online",
+    },
+  ]);
+
+  const handleSendAiDoubt = async (queryText?: string) => {
+    const q = (queryText || aiInput).trim();
+    if (!q || aiLoading) return;
+
+    const userMsg = {
+      id: `u-${Date.now()}`,
+      sender: "user" as const,
+      text: q,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+    };
+
+    setAiMessages((prev) => [...prev, userMsg]);
+    setAiInput("");
+    setAiLoading(true);
+
+    try {
+      const res = await fetch("/api/ai-doubt-solver", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: q,
+          classGrade: student.classGrade,
+        }),
+      });
+      const data = await res.json();
+      if (data.answer) {
+        setAiMessages((prev) => [
+          ...prev,
+          {
+            id: `ai-${Date.now()}`,
+            sender: "ai",
+            text: data.answer,
+            time: data.timestamp || new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          },
+        ]);
+      }
+    } catch {
+      setAiMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          sender: "ai",
+          text: "Network issue ya connection error. Please dobara poochhein.",
+          time: "Just now",
+        },
+      ]);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   return (
@@ -344,12 +418,28 @@ export default function StudentPortalPage() {
                         <FileText className="h-4 w-4 text-emerald-600 shrink-0" />
                         <div>
                           <span className="font-semibold text-foreground">Handwritten Revision Notes (PDF)</span>
-                          <span className="text-[10px] text-muted-foreground block">3.2 MB • Verified</span>
+                          <span className="text-[10px] text-muted-foreground block">3.2 MB • Verified Teacher Notes</span>
                         </div>
                       </div>
-                      <Button asChild size="sm" variant="outline" className="h-7 text-xs rounded-lg gap-1">
+                      <Button asChild size="sm" variant="outline" className="h-7 text-xs rounded-lg gap-1 border-emerald-500/30 text-emerald-600">
                         <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" rel="noopener noreferrer">
-                          <Download className="h-3 w-3" /> Download
+                          <Download className="h-3 w-3" /> Download PDF
+                        </a>
+                      </Button>
+                    </div>
+
+                    {/* PYQ Previous Year Question Paper */}
+                    <div className="p-3 rounded-2xl bg-amber-500/[0.04] border border-amber-500/20 flex items-center justify-between">
+                      <div className="flex items-center gap-2.5">
+                        <Award className="h-4 w-4 text-amber-500 shrink-0" />
+                        <div>
+                          <span className="font-semibold text-foreground">CBSE 2024 Solved Board PYQ Paper</span>
+                          <span className="text-[10px] text-muted-foreground block">Past 10 Years Question Bank + Solution Key</span>
+                        </div>
+                      </div>
+                      <Button asChild size="sm" variant="outline" className="h-7 text-xs rounded-lg gap-1 border-amber-500/30 text-amber-600 hover:bg-amber-500/10">
+                        <a href="https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf" target="_blank" rel="noopener noreferrer">
+                          <Download className="h-3 w-3" /> Solved PYQ
                         </a>
                       </Button>
                     </div>
@@ -411,56 +501,230 @@ export default function StudentPortalPage() {
           </div>
         )}
 
-        {/* ================= DOUBTS RESOLUTION TAB ================= */}
+        {/* ================= DOUBTS RESOLUTION TAB (AI CHAT + FACULTY) ================= */}
         {activeTab === "doubts" && (
           <div className="space-y-6">
-            <div>
-              <h2 className="text-xl font-bold tracking-tight text-foreground">Ask Your Faculty a Doubt</h2>
-              <p className="text-xs text-muted-foreground">Upload a photo of any difficult question or concept</p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+                  <Bot className="h-5 w-5 text-primary" /> Doubt Solving Desk
+                </h2>
+                <p className="text-xs text-muted-foreground">
+                  24x7 AI Mentor se turant samjhein ya apne campus teacher ko photo bhej kar poochhein
+                </p>
+              </div>
+
+              {/* Sub-tab Switcher */}
+              <div className="flex items-center gap-1.5 p-1 bg-muted/60 rounded-2xl border border-border/60">
+                <Button
+                  size="sm"
+                  variant={doubtSubTab === "ai" ? "default" : "ghost"}
+                  onClick={() => setDoubtSubTab("ai")}
+                  className="rounded-xl text-xs h-8 gap-1.5 font-semibold"
+                >
+                  <Bot className="h-3.5 w-3.5" /> 🤖 AI Doubt Solver (Instant)
+                </Button>
+                <Button
+                  size="sm"
+                  variant={doubtSubTab === "faculty" ? "default" : "ghost"}
+                  onClick={() => setDoubtSubTab("faculty")}
+                  className="rounded-xl text-xs h-8 gap-1.5 font-semibold"
+                >
+                  <User className="h-3.5 w-3.5" /> 👨‍🏫 Ask Teacher (Photo)
+                </Button>
+              </div>
             </div>
 
-            <Card className="rounded-3xl border border-border/80 p-5 bg-card space-y-3">
-              <form onSubmit={handleAskDoubt} className="space-y-3">
-                <Textarea
-                  rows={3}
-                  required
-                  placeholder="Describe your question or difficulty in detail..."
-                  value={doubtText}
-                  onChange={(e) => setDoubtText(e.target.value)}
-                  className="rounded-2xl text-xs resize-none"
-                />
-
-                <div className="flex items-center justify-between">
-                  <Button type="button" variant="outline" size="sm" className="rounded-xl text-xs gap-1.5">
-                    <Upload className="h-3.5 w-3.5 text-primary" /> Attach Photo
-                  </Button>
-                  <Button type="submit" size="sm" className="rounded-xl text-xs gap-1.5 shadow-md">
-                    <Send className="h-3.5 w-3.5" /> Submit Doubt
-                  </Button>
+            {/* SUB-TAB 1: AI DOUBT CHATBOT */}
+            {doubtSubTab === "ai" && (
+              <div className="space-y-4">
+                {/* Quick Topic Chips */}
+                <div className="space-y-1.5">
+                  <span className="text-[11px] font-semibold text-muted-foreground">Quick Doubt Starters (Click to Ask):</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {[
+                      "Photosynthesis equation samjhao 🌿",
+                      "Ohm's Law formula & numerical ⚡",
+                      "Mitochondria powerhouse kyu? 🧬",
+                      "Pythagoras theorem proof 📐",
+                      "Newton's 3 laws of motion 🚀",
+                      "Quadratic equations formula 🧮",
+                      "Active & Passive voice rules ✍️",
+                    ].map((topic, tIdx) => (
+                      <button
+                        key={tIdx}
+                        type="button"
+                        onClick={() => handleSendAiDoubt(topic)}
+                        className="text-[11px] px-2.5 py-1 rounded-xl bg-primary/10 hover:bg-primary/20 text-primary font-medium border border-primary/20 transition-all hover:scale-105 active:scale-95"
+                      >
+                        {topic}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </form>
-            </Card>
 
-            <div className="space-y-3">
-              <h3 className="font-bold text-sm text-foreground">Previous Questions</h3>
-              {doubtsList.map((d) => (
-                <Card key={d.id} className="rounded-2xl border p-4 bg-card space-y-2 text-xs">
-                  <div className="flex items-center justify-between">
-                    <span className="font-semibold text-primary">{d.chapter}</span>
-                    <Badge variant={d.status === "answered" ? "default" : "outline"} className="text-[10px] py-0">
-                      {d.status === "answered" ? "Answered" : "Pending Review"}
+                {/* AI Chat Window */}
+                <Card className="rounded-3xl border border-border/80 shadow-md bg-card overflow-hidden flex flex-col h-[520px]">
+                  {/* Chat Header */}
+                  <div className="p-3.5 px-4 bg-muted/40 border-b flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-8 w-8 rounded-xl bg-primary text-white flex items-center justify-center shadow-md">
+                        <Bot className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <div className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                          STA AI Study Mentor
+                          <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                        </div>
+                        <div className="text-[10px] text-muted-foreground">Class 4 to 12 Academic Tutor • 24x7 Active</div>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="text-[10px] text-primary border-primary/30">
+                      Smart Pedagogical AI
                     </Badge>
                   </div>
-                  <p className="text-foreground font-medium">{d.question}</p>
-                  {d.answer && (
-                    <div className="p-3 rounded-xl bg-primary/[0.04] border border-primary/20 text-muted-foreground mt-2">
-                      <span className="font-bold text-primary block mb-0.5">Faculty Response:</span>
-                      {d.answer}
-                    </div>
-                  )}
+
+                  {/* Messages Feed */}
+                  <div className="flex-1 p-4 overflow-y-auto space-y-3.5 bg-slate-50/30 dark:bg-slate-950/20">
+                    {aiMessages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex gap-2.5 max-w-[88%] sm:max-w-[80%] ${
+                          msg.sender === "user" ? "ml-auto flex-row-reverse" : "mr-auto"
+                        }`}
+                      >
+                        <div
+                          className={`h-7 w-7 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold shadow-sm ${
+                            msg.sender === "user"
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-violet-600 text-white"
+                          }`}
+                        >
+                          {msg.sender === "user" ? "AP" : <Bot className="h-4 w-4" />}
+                        </div>
+
+                        <div
+                          className={`rounded-2xl p-3.5 text-xs space-y-1.5 shadow-sm leading-relaxed ${
+                            msg.sender === "user"
+                              ? "bg-primary text-primary-foreground rounded-tr-none font-medium"
+                              : "bg-card border border-border/80 text-foreground rounded-tl-none whitespace-pre-wrap"
+                          }`}
+                        >
+                          <div>{msg.text}</div>
+                          <div
+                            className={`text-[9px] pt-1 flex items-center justify-between ${
+                              msg.sender === "user" ? "text-primary-foreground/70" : "text-muted-foreground"
+                            }`}
+                          >
+                            <span>{msg.time}</span>
+                            {msg.sender === "ai" && (
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(msg.text);
+                                  toast({ title: "Copied to clipboard!" });
+                                }}
+                                className="hover:text-primary transition-colors flex items-center gap-1"
+                                title="Copy answer"
+                              >
+                                <Copy className="h-3 w-3" /> Copy
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* AI Loading indicator */}
+                    {aiLoading && (
+                      <div className="flex gap-2.5 max-w-[80%] mr-auto items-center">
+                        <div className="h-7 w-7 rounded-xl bg-violet-600 text-white flex items-center justify-center shrink-0">
+                          <Bot className="h-4 w-4" />
+                        </div>
+                        <div className="rounded-2xl p-3 bg-card border border-border/80 text-xs text-muted-foreground flex items-center gap-2">
+                          <div className="h-2 w-2 rounded-full bg-primary animate-ping" />
+                          <span>AI Mentor doubt ka step-by-step answer bana raha hai...</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Input Form */}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSendAiDoubt();
+                    }}
+                    className="p-3 bg-card border-t border-border/80 flex items-center gap-2"
+                  >
+                    <Input
+                      placeholder="Maths, Science, English ka doubt poochhein (e.g. Newton's laws ya Pythagoras)..."
+                      value={aiInput}
+                      onChange={(e) => setAiInput(e.target.value)}
+                      disabled={aiLoading}
+                      className="rounded-2xl text-xs h-10 bg-muted/30 focus-visible:ring-primary"
+                    />
+                    <Button
+                      type="submit"
+                      disabled={aiLoading || !aiInput.trim()}
+                      className="rounded-2xl h-10 px-4 text-xs font-semibold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+                    >
+                      <Send className="h-3.5 w-3.5" /> Poochhein
+                    </Button>
+                  </form>
                 </Card>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* SUB-TAB 2: FACULTY PHOTO DOUBTS */}
+            {doubtSubTab === "faculty" && (
+              <div className="space-y-6">
+                <Card className="rounded-3xl border border-border/80 p-5 bg-card space-y-3">
+                  <form onSubmit={handleAskDoubt} className="space-y-3">
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold">Describe Your Question</Label>
+                      <Textarea
+                        rows={3}
+                        required
+                        placeholder="Apne question ya homework problem ko detail me likhein..."
+                        value={doubtText}
+                        onChange={(e) => setDoubtText(e.target.value)}
+                        className="rounded-2xl text-xs resize-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <Button type="button" variant="outline" size="sm" className="rounded-xl text-xs gap-1.5">
+                        <Upload className="h-3.5 w-3.5 text-primary" /> Attach Question Photo
+                      </Button>
+                      <Button type="submit" size="sm" className="rounded-xl text-xs gap-1.5 shadow-md">
+                        <Send className="h-3.5 w-3.5" /> Submit to Faculty
+                      </Button>
+                    </div>
+                  </form>
+                </Card>
+
+                <div className="space-y-3">
+                  <h3 className="font-bold text-sm text-foreground">Previous Questions to Faculty</h3>
+                  {doubtsList.map((d) => (
+                    <Card key={d.id} className="rounded-2xl border p-4 bg-card space-y-2 text-xs">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-primary">{d.chapter}</span>
+                        <Badge variant={d.status === "answered" ? "default" : "outline"} className="text-[10px] py-0">
+                          {d.status === "answered" ? "Answered" : "Pending Review"}
+                        </Badge>
+                      </div>
+                      <p className="text-foreground font-medium">{d.question}</p>
+                      {d.answer && (
+                        <div className="p-3 rounded-xl bg-primary/[0.04] border border-primary/20 text-muted-foreground mt-2">
+                          <span className="font-bold text-primary block mb-0.5">Faculty Response:</span>
+                          {d.answer}
+                        </div>
+                      )}
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

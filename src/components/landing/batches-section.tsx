@@ -18,11 +18,27 @@ import { siteContent, type BatchItem } from "@/data/site-content";
 
 export function BatchesSection() {
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
+  const [batchesList, setBatchesList] = React.useState<BatchItem[]>(siteContent.batches);
+
+  // Sync with admin changes from localStorage if available
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem("sta_batches_data");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setBatchesList(parsed);
+        }
+      }
+    } catch {
+      // fallback to siteContent.batches
+    }
+  }, []);
 
   const filteredBatches = React.useMemo(() => {
-    if (activeCategory === "all") return siteContent.batches;
-    return siteContent.batches.filter((b) => b.category === activeCategory);
-  }, [activeCategory]);
+    if (activeCategory === "all") return batchesList;
+    return batchesList.filter((b) => b.category === activeCategory);
+  }, [activeCategory, batchesList]);
 
   return (
     <section id="batches" className="py-20 md:py-28 relative">
@@ -124,17 +140,35 @@ export function BatchesSection() {
                     </div>
 
                     {/* Pricing */}
-                    <div className="pt-2 flex items-baseline gap-2">
-                      <span className="text-2xl sm:text-3xl font-extrabold text-foreground">
-                        ₹{batch.price.toLocaleString("en-IN")}
-                      </span>
-                      <span className="text-sm text-muted-foreground line-through">
-                        ₹{batch.originalPrice.toLocaleString("en-IN")}
-                      </span>
-                      <span className="text-xs font-semibold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full ml-auto">
-                        Save ₹{(batch.originalPrice - batch.price).toLocaleString("en-IN")}
-                      </span>
-                    </div>
+                    {batch.price && batch.price > 0 ? (
+                      <div className="pt-2 flex items-baseline gap-2">
+                        <span className="text-2xl sm:text-3xl font-extrabold text-foreground">
+                          ₹{batch.price.toLocaleString("en-IN")}
+                        </span>
+                        {batch.originalPrice && batch.originalPrice > batch.price ? (
+                          <>
+                            <span className="text-sm text-muted-foreground line-through">
+                              ₹{batch.originalPrice.toLocaleString("en-IN")}
+                            </span>
+                            <span className="text-xs font-semibold text-emerald-600 bg-emerald-500/10 px-2 py-0.5 rounded-full ml-auto">
+                              Save ₹{(batch.originalPrice - batch.price).toLocaleString("en-IN")}
+                            </span>
+                          </>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">/ course fee</span>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="pt-2 p-3 rounded-2xl bg-muted/40 border border-border/50 flex items-center justify-between">
+                        <div>
+                          <div className="text-xs font-bold text-foreground">Fee: Set by Institute</div>
+                          <div className="text-[11px] text-muted-foreground">Affordable monthly & installment plans</div>
+                        </div>
+                        <Badge variant="outline" className="text-[10px] font-semibold text-primary border-primary/30 bg-primary/5">
+                          Inquire Fee
+                        </Badge>
+                      </div>
+                    )}
                   </CardContent>
 
                   <CardFooter className="pt-2 pb-6 flex gap-3">
@@ -143,7 +177,7 @@ export function BatchesSection() {
                       className="w-full rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md shadow-primary/20 gap-2 h-11"
                     >
                       <Link href="#contact">
-                        <Zap className="h-4 w-4" /> Enroll Now
+                        <Zap className="h-4 w-4" /> {batch.price && batch.price > 0 ? `Enroll Now (₹${batch.price})` : "Enroll / Inquire Fee"}
                       </Link>
                     </Button>
                     <Button
@@ -151,7 +185,7 @@ export function BatchesSection() {
                       variant="outline"
                       className="rounded-2xl border-border hover:bg-muted font-medium h-11 px-4"
                     >
-                      <Link href="#contact">Details</Link>
+                      <Link href="#contact">Contact</Link>
                     </Button>
                   </CardFooter>
                 </Card>

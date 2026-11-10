@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { 
   BookOpen, 
   Plus, 
@@ -11,14 +12,17 @@ import {
   ChevronRight,
   ChevronUp,
   ChevronDown, 
-  Eye, 
   Sparkles, 
   Clock, 
   Calendar,
   Layers,
   ArrowUpDown,
   CheckCircle2,
-  ExternalLink
+  ExternalLink,
+  GraduationCap,
+  Award,
+  HelpCircle,
+  FileSpreadsheet
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -34,6 +38,7 @@ import {
   DialogTitle, 
   DialogFooter 
 } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { siteContent, type BatchItem } from "@/data/site-content";
 import { 
@@ -78,12 +83,45 @@ interface NoteItem {
   fileUrl: string;
 }
 
+export interface PyqItem {
+  id: string;
+  chapterId: string;
+  title: string;
+  examYear: string;
+  boardExam: string; // CBSE, ICSE, Bihar Board, School Exam
+  fileUrl: string;
+}
+
 export default function BatchesCurriculumPage() {
   const { toast } = useToast();
 
-  // Batches
+  // Batches State
   const [batches, setBatches] = React.useState<BatchItem[]>(siteContent.batches);
   const [selectedBatch, setSelectedBatch] = React.useState<BatchItem>(siteContent.batches[0]);
+  const [editingBatchId, setEditingBatchId] = React.useState<string | null>(null);
+
+  // Load customized batches and PYQs from localStorage if present
+  React.useEffect(() => {
+    try {
+      const storedBatches = localStorage.getItem("sta_batches_data");
+      if (storedBatches) {
+        const parsed = JSON.parse(storedBatches);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setBatches(parsed);
+          setSelectedBatch(parsed[0]);
+        }
+      }
+      const storedPyqs = localStorage.getItem("sta_pyqs_data");
+      if (storedPyqs) {
+        const parsedP = JSON.parse(storedPyqs);
+        if (Array.isArray(parsedP)) {
+          setPyqs(parsedP);
+        }
+      }
+    } catch {
+      // fallback to initial
+    }
+  }, []);
 
   // Subjects
   const [subjects, setSubjects] = React.useState<SubjectItem[]>([
@@ -139,24 +177,56 @@ export default function BatchesCurriculumPage() {
     },
   ]);
 
+  // PYQs (Previous Year Questions)
+  const [pyqs, setPyqs] = React.useState<PyqItem[]>([
+    {
+      id: "pyq-1",
+      chapterId: "ch-1",
+      title: "CBSE Class 10 Board 2024 Science Solved Paper",
+      examYear: "2024",
+      boardExam: "CBSE Board",
+      fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    },
+    {
+      id: "pyq-2",
+      chapterId: "ch-1",
+      title: "Bihar Board (BSEB) Class 10 Science 2023 Solved Paper",
+      examYear: "2023",
+      boardExam: "Bihar Board",
+      fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    },
+    {
+      id: "pyq-3",
+      chapterId: "ch-1",
+      title: "Annual School Exam Chapter-wise PYQ & Model Answers",
+      examYear: "2022",
+      boardExam: "School Annual",
+      fileUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    },
+  ]);
+
+  // Active curriculum content tab: lectures | notes | pyqs
+  const [curriculumTab, setCurriculumTab] = React.useState<"lectures" | "notes" | "pyqs">("lectures");
+
   // Modal States
   const [batchModalOpen, setBatchModalOpen] = React.useState(false);
   const [lectureModalOpen, setLectureModalOpen] = React.useState(false);
   const [noteModalOpen, setNoteModalOpen] = React.useState(false);
+  const [pyqModalOpen, setPyqModalOpen] = React.useState(false);
 
   // Form states
   const [batchForm, setBatchForm] = React.useState({
     title: "",
     classLevel: "Class 10th",
-    category: "secondary" as any,
+    category: "secondary" as "junior" | "middle" | "secondary" | "senior",
     description: "",
-    price: 14999,
-    originalPrice: 19999,
-    duration: "10 Months",
-    startDate: "15 April 2026",
-    badge: "New Batch",
+    price: 0,
+    originalPrice: 0,
+    duration: "Full Session 2026–27",
+    startDate: "Admissions Open",
+    badge: "Class 4-12",
     isPopular: false,
-    features: "Daily Live Sessions\nPrinted Study Modules\nWeekly Mock Tests\nInstant Doubt Clearing",
+    features: "Daily Offline / App Teaching\nChapter Revision Notes\nWeekly Test Series\n1-on-1 Doubt Clearance",
   });
 
   const [lectureForm, setLectureForm] = React.useState({
@@ -171,8 +241,16 @@ export default function BatchesCurriculumPage() {
     fileUrl: "",
   });
 
+  const [pyqForm, setPyqForm] = React.useState({
+    title: "",
+    examYear: "2024",
+    boardExam: "CBSE Board",
+    fileUrl: "",
+  });
+
   // Select initial subject and chapter on batch change
   React.useEffect(() => {
+    if (!selectedBatch) return;
     const batchSubs = subjects.filter((s) => s.batchId === selectedBatch.id);
     if (batchSubs.length > 0) {
       setSelectedSubject(batchSubs[0]);
@@ -195,28 +273,115 @@ export default function BatchesCurriculumPage() {
     }
   }, [selectedSubject, chapters]);
 
-  // ADD BATCH
+  // OPEN CREATE BATCH MODAL
+  const handleOpenCreateBatch = () => {
+    setEditingBatchId(null);
+    setBatchForm({
+      title: "Class 10 Board Excellence 2026-27",
+      classLevel: "Class 10th",
+      category: "secondary",
+      description: "Comprehensive subject tuition with full syllabus coverage, notes, and weekly tests.",
+      price: 0,
+      originalPrice: 0,
+      duration: "Full Session 2026–27",
+      startDate: "Admissions Open",
+      badge: "Board Special",
+      isPopular: true,
+      features: "Complete Syllabus Coverage\nHandwritten Chapter Notes\nWeekly Tests & Result Analysis\n1-on-1 Faculty Doubt Clearing",
+    });
+    setBatchModalOpen(true);
+  };
+
+  // OPEN EDIT BATCH MODAL
+  const handleOpenEditBatch = (batch: BatchItem) => {
+    setEditingBatchId(batch.id);
+    setBatchForm({
+      title: batch.title,
+      classLevel: batch.classLevel,
+      category: (batch.category === "all" ? "secondary" : batch.category) as any,
+      description: batch.description,
+      price: batch.price || 0,
+      originalPrice: batch.originalPrice || 0,
+      duration: batch.duration,
+      startDate: batch.startDate,
+      badge: batch.badge || "",
+      isPopular: Boolean(batch.isPopular),
+      features: batch.features ? batch.features.join("\n") : "",
+    });
+    setBatchModalOpen(true);
+  };
+
+  // SAVE (CREATE OR EDIT) BATCH
   const handleSaveBatch = (e: React.FormEvent) => {
     e.preventDefault();
-    const newBatch: BatchItem = {
-      id: `b-${Date.now()}`,
-      title: batchForm.title,
-      classLevel: batchForm.classLevel,
-      category: batchForm.category,
-      description: batchForm.description,
-      price: Number(batchForm.price),
-      originalPrice: Number(batchForm.originalPrice),
-      duration: batchForm.duration,
-      startDate: batchForm.startDate,
-      badge: batchForm.badge || undefined,
-      isPopular: batchForm.isPopular,
-      features: batchForm.features.split("\n").filter(Boolean),
-    };
 
-    setBatches([...batches, newBatch]);
-    setSelectedBatch(newBatch);
-    setBatchModalOpen(false);
-    toast({ title: "Batch Created!", description: `${newBatch.title} is now active.` });
+    if (editingBatchId) {
+      // Update existing batch
+      const updatedList = batches.map((b) => {
+        if (b.id === editingBatchId) {
+          return {
+            ...b,
+            title: batchForm.title,
+            classLevel: batchForm.classLevel,
+            category: batchForm.category,
+            description: batchForm.description,
+            price: Number(batchForm.price),
+            originalPrice: Number(batchForm.originalPrice),
+            duration: batchForm.duration,
+            startDate: batchForm.startDate,
+            badge: batchForm.badge || undefined,
+            isPopular: batchForm.isPopular,
+            features: batchForm.features.split("\n").map((f) => f.trim()).filter(Boolean),
+          };
+        }
+        return b;
+      });
+
+      setBatches(updatedList);
+      const updatedCurrent = updatedList.find((b) => b.id === editingBatchId);
+      if (updatedCurrent) setSelectedBatch(updatedCurrent);
+
+      try {
+        localStorage.setItem("sta_batches_data", JSON.stringify(updatedList));
+      } catch {}
+
+      setBatchModalOpen(false);
+      setEditingBatchId(null);
+      toast({
+        title: "Batch Updated Successfully!",
+        description: `Fee: ${batchForm.price > 0 ? `₹${batchForm.price}` : "Custom Fee / Set by Institute"}. Changes live on homepage.`,
+      });
+    } else {
+      // Create new batch
+      const newBatch: BatchItem = {
+        id: `b-${Date.now()}`,
+        title: batchForm.title,
+        classLevel: batchForm.classLevel,
+        category: batchForm.category,
+        description: batchForm.description,
+        price: Number(batchForm.price),
+        originalPrice: Number(batchForm.originalPrice),
+        duration: batchForm.duration,
+        startDate: batchForm.startDate,
+        badge: batchForm.badge || undefined,
+        isPopular: batchForm.isPopular,
+        features: batchForm.features.split("\n").map((f) => f.trim()).filter(Boolean),
+      };
+
+      const updatedList = [...batches, newBatch];
+      setBatches(updatedList);
+      setSelectedBatch(newBatch);
+
+      try {
+        localStorage.setItem("sta_batches_data", JSON.stringify(updatedList));
+      } catch {}
+
+      setBatchModalOpen(false);
+      toast({
+        title: "Batch Created Successfully!",
+        description: `${newBatch.title} is now active. Fee set to ${newBatch.price > 0 ? `₹${newBatch.price}` : "Custom / On Request"}.`,
+      });
+    }
   };
 
   // DELETE BATCH
@@ -225,12 +390,16 @@ export default function BatchesCurriculumPage() {
     const remaining = batches.filter((b) => b.id !== id);
     setBatches(remaining);
     if (remaining.length > 0) setSelectedBatch(remaining[0]);
+    try {
+      localStorage.setItem("sta_batches_data", JSON.stringify(remaining));
+    } catch {}
     toast({ title: "Batch Deleted", description: title });
   };
 
   // ADD SUBJECT
   const handleAddSubject = () => {
-    const name = window.prompt("Enter new Subject name (e.g. Mathematics):");
+    if (!selectedBatch) return;
+    const name = window.prompt("Enter new Subject name (e.g. Mathematics, Science, English):");
     if (!name) return;
     const newSub: SubjectItem = {
       id: `sub-${Date.now()}`,
@@ -240,6 +409,14 @@ export default function BatchesCurriculumPage() {
     setSubjects([...subjects, newSub]);
     setSelectedSubject(newSub);
     toast({ title: "Subject Added", description: name });
+  };
+
+  // DELETE SUBJECT
+  const handleDeleteSubject = (id: string, name: string) => {
+    if (!window.confirm(`Delete subject "${name}"?`)) return;
+    const remaining = subjects.filter((s) => s.id !== id);
+    setSubjects(remaining);
+    toast({ title: "Subject Deleted", description: name });
   };
 
   // ADD CHAPTER
@@ -257,7 +434,15 @@ export default function BatchesCurriculumPage() {
     toast({ title: "Chapter Added", description: name });
   };
 
-  // ADD LECTURE
+  // DELETE CHAPTER
+  const handleDeleteChapter = (id: string, name: string) => {
+    if (!window.confirm(`Delete chapter "${name}"?`)) return;
+    const remaining = chapters.filter((c) => c.id !== id);
+    setChapters(remaining);
+    toast({ title: "Chapter Deleted", description: name });
+  };
+
+  // ADD LECTURE (YOUTUBE LINK OR UPLOAD)
   const handleSaveLecture = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedChapter) return;
@@ -273,10 +458,10 @@ export default function BatchesCurriculumPage() {
     setLectures([...lectures, newLec]);
     setLectureModalOpen(false);
     setLectureForm({ title: "", videoUrl: "", duration: "45 mins", isFreePreview: false });
-    toast({ title: "Lecture Added!", description: newLec.title });
+    toast({ title: "Video Lecture Added!", description: newLec.title });
   };
 
-  // ADD NOTE
+  // ADD NOTE (PDF LINK)
   const handleSaveNote = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedChapter) return;
@@ -289,7 +474,39 @@ export default function BatchesCurriculumPage() {
     setNotes([...notes, newNote]);
     setNoteModalOpen(false);
     setNoteForm({ title: "", fileUrl: "" });
-    toast({ title: "PDF Note Added!", description: newNote.title });
+    toast({ title: "PDF Study Note Added!", description: newNote.title });
+  };
+
+  // ADD PYQ (PREVIOUS YEAR QUESTIONS)
+  const handleSavePyq = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedChapter) return;
+    const newPyq: PyqItem = {
+      id: `pyq-${Date.now()}`,
+      chapterId: selectedChapter.id,
+      title: pyqForm.title,
+      examYear: pyqForm.examYear,
+      boardExam: pyqForm.boardExam,
+      fileUrl: pyqForm.fileUrl,
+    };
+    const updatedPyqs = [...pyqs, newPyq];
+    setPyqs(updatedPyqs);
+    try {
+      localStorage.setItem("sta_pyqs_data", JSON.stringify(updatedPyqs));
+    } catch {}
+    setPyqModalOpen(false);
+    setPyqForm({ title: "", examYear: "2024", boardExam: "CBSE Board", fileUrl: "" });
+    toast({ title: "PYQ Paper Added!", description: `${newPyq.title} (${newPyq.examYear})` });
+  };
+
+  const handleDeletePyq = (id: string, title: string) => {
+    if (!window.confirm(`Delete PYQ "${title}"?`)) return;
+    const remaining = pyqs.filter((p) => p.id !== id);
+    setPyqs(remaining);
+    try {
+      localStorage.setItem("sta_pyqs_data", JSON.stringify(remaining));
+    } catch {}
+    toast({ title: "PYQ Deleted", description: title });
   };
 
   const reorderList = <T,>(list: T[], index: number, direction: "up" | "down", setter: (items: T[]) => void) => {
@@ -305,52 +522,53 @@ export default function BatchesCurriculumPage() {
   const currentChapters = chapters.filter((c) => c.subjectId === selectedSubject?.id);
   const currentLectures = lectures.filter((l) => l.chapterId === selectedChapter?.id);
   const currentNotes = notes.filter((n) => n.chapterId === selectedChapter?.id);
+  const currentPyqs = pyqs.filter((p) => p.chapterId === selectedChapter?.id);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
+      {/* Top Banner / Actions */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-3 border-b border-border/60">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary" /> Batches & Curriculum Manager
+            <BookOpen className="h-6 w-6 text-primary" /> Batches, Lectures, Notes & PYQ Manager
           </h2>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Manage course batches, subjects, chapters, recorded video lectures, and PDF study notes.
+            Aap admin hain — yahan se batch fees set karein, YouTube video links dein, notes PDF dalein, PYQ papers upload karein aur test banayein.
           </p>
         </div>
 
-        <Button
-          size="sm"
-          className="rounded-xl text-xs gap-1.5 shadow-md shadow-primary/20"
-          onClick={() => {
-            setBatchForm({
-              title: "Class 10 Intensive Batch",
-              classLevel: "Class 10th",
-              category: "secondary" as any,
-              description: "Comprehensive subject coaching with full syllabus coverage, derivation booklets, and weekly tests.",
-              price: 13999,
-              originalPrice: 18999,
-              duration: "10 Months",
-              startDate: "15 April 2026",
-              badge: "New Batch",
-              isPopular: false,
-              features: "Daily Live + Classroom Teaching\nHandwritten Chapter Notes\nWeekly Mock Exams\n1-on-1 Doubt Support",
-            });
-            setBatchModalOpen(true);
-          }}
-        >
-          <Plus className="h-3.5 w-3.5" /> Create New Batch
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            asChild
+            className="rounded-xl text-xs gap-1.5 border-border"
+          >
+            <Link href="/admin/tests">
+              <Award className="h-3.5 w-3.5 text-primary" /> Create & Take Tests →
+            </Link>
+          </Button>
+
+          <Button
+            size="sm"
+            className="rounded-xl text-xs gap-1.5 shadow-md shadow-primary/20"
+            onClick={handleOpenCreateBatch}
+          >
+            <Plus className="h-3.5 w-3.5" /> Create New Batch
+          </Button>
+        </div>
       </div>
 
-      {/* 3-Tier Curriculum Grid Explorer */}
+      {/* 3-Column Manager Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Column 1: Batches List (4 cols) */}
+        
+        {/* ================= COLUMN 1: BATCHES LIST & PRICING ================= */}
         <div className="lg:col-span-4 space-y-3">
           <div className="flex items-center justify-between px-1">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Batches ({batches.length})
             </span>
+            <span className="text-[11px] text-primary font-medium">Click to select & manage</span>
           </div>
 
           <div className="space-y-2.5">
@@ -371,9 +589,25 @@ export default function BatchesCurriculumPage() {
                       {b.classLevel}
                     </Badge>
                     <div className="flex items-center gap-1">
+                      {/* EDIT BATCH BUTTON */}
                       <Button
                         variant="ghost"
                         size="icon"
+                        title="Edit Batch & Set Price"
+                        className="h-6 w-6 text-primary hover:bg-primary/10 rounded-md"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenEditBatch(b);
+                        }}
+                      >
+                        <Edit3 className="h-3 w-3" />
+                      </Button>
+
+                      {/* DELETE BATCH BUTTON */}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Delete Batch"
                         className="h-6 w-6 text-destructive hover:bg-destructive/10 rounded-md"
                         onClick={(e) => {
                           e.stopPropagation();
@@ -387,32 +621,63 @@ export default function BatchesCurriculumPage() {
                   </div>
 
                   <h4 className="font-bold text-sm text-foreground mt-2 line-clamp-1">{b.title}</h4>
+                  
                   <div className="flex items-center justify-between text-xs text-muted-foreground mt-2 pt-2 border-t border-border/50">
-                    <span className="font-bold text-foreground">₹{b.price.toLocaleString("en-IN")}</span>
-                    <span>{b.duration}</span>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="font-bold text-foreground">
+                        {b.price && b.price > 0 ? `₹${b.price.toLocaleString("en-IN")}` : "Fee: Set by You"}
+                      </span>
+                      {b.originalPrice && b.originalPrice > b.price ? (
+                        <span className="line-through text-[10px] text-muted-foreground">₹{b.originalPrice}</span>
+                      ) : null}
+                    </div>
+                    <span className="text-[11px]">{b.duration}</span>
                   </div>
                 </div>
               );
             })}
           </div>
+
+          {/* Quick Active Batch Summary Card */}
+          {selectedBatch && (
+            <Card className="rounded-2xl border border-primary/20 bg-primary/[0.02] p-4 space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-foreground text-xs">Selected: {selectedBatch.title}</span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-6 text-[11px] px-2 rounded-lg gap-1 border-primary/30 text-primary"
+                  onClick={() => handleOpenEditBatch(selectedBatch)}
+                >
+                  <Edit3 className="h-3 w-3" /> Edit Fee & Info
+                </Button>
+              </div>
+              <p className="text-muted-foreground text-[11px] line-clamp-2">{selectedBatch.description}</p>
+              <div className="flex items-center gap-2 pt-1 font-semibold text-primary">
+                <span>Fee: {selectedBatch.price > 0 ? `₹${selectedBatch.price.toLocaleString("en-IN")}` : "Custom / On Request"}</span>
+                <span>•</span>
+                <span>{selectedBatch.classLevel}</span>
+              </div>
+            </Card>
+          )}
         </div>
 
-        {/* Column 2: Subjects & Chapters (4 cols) */}
+        {/* ================= COLUMN 2: SUBJECTS & CHAPTERS ================= */}
         <div className="lg:col-span-4 space-y-5">
           {/* Subjects Card */}
           <Card className="rounded-3xl border border-border/80 p-5 shadow-sm bg-card space-y-3">
             <div className="flex items-center justify-between pb-2 border-b">
               <span className="text-xs font-bold text-foreground">
-                Subjects in {selectedBatch?.classLevel}
+                Subjects in {selectedBatch?.classLevel || "Selected Batch"}
               </span>
               <Button size="sm" variant="ghost" className="h-7 text-xs text-primary px-2" onClick={handleAddSubject}>
-                <Plus className="h-3 w-3 mr-1" /> Add
+                <Plus className="h-3 w-3 mr-1" /> Add Subject
               </Button>
             </div>
 
             <div className="space-y-1.5">
               {currentSubjects.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">No subjects added yet.</p>
+                <p className="text-xs text-muted-foreground py-2 text-center">No subjects added yet. Click &apos;Add Subject&apos;.</p>
               ) : (
                 currentSubjects.map((sub) => {
                   const isSelected = selectedSubject?.id === sub.id;
@@ -427,7 +692,20 @@ export default function BatchesCurriculumPage() {
                       }`}
                     >
                       <span className="truncate">{sub.name}</span>
-                      <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-80" />
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5 opacity-70 hover:opacity-100 rounded-md"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteSubject(sub.id, sub.name);
+                          }}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                        <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-80" />
+                      </div>
                     </div>
                   );
                 })
@@ -448,15 +726,15 @@ export default function BatchesCurriculumPage() {
                 className="h-7 text-xs text-primary px-2"
                 onClick={handleAddChapter}
               >
-                <Plus className="h-3 w-3 mr-1" /> Add
+                <Plus className="h-3 w-3 mr-1" /> Add Chapter
               </Button>
             </div>
 
             <div className="space-y-1.5">
               {!selectedSubject ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">Select a subject above.</p>
+                <p className="text-xs text-muted-foreground py-2 text-center">Select a subject above first.</p>
               ) : currentChapters.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">No chapters yet. Click Add.</p>
+                <p className="text-xs text-muted-foreground py-2 text-center">No chapters yet. Click &apos;Add Chapter&apos;.</p>
               ) : (
                 currentChapters.map((ch) => {
                   const isSelected = selectedChapter?.id === ch.id;
@@ -471,7 +749,20 @@ export default function BatchesCurriculumPage() {
                       }`}
                     >
                       <span className="truncate">{ch.name}</span>
-                      <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-80" />
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5 opacity-70 hover:opacity-100 rounded-md"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteChapter(ch.id, ch.name);
+                          }}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                        <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-80" />
+                      </div>
                     </div>
                   );
                 })
@@ -480,140 +771,238 @@ export default function BatchesCurriculumPage() {
           </Card>
         </div>
 
-        {/* Column 3: Lectures & Notes in Selected Chapter (4 cols) */}
-        <div className="lg:col-span-4 space-y-5">
-          {/* Lectures List */}
-          <Card className="rounded-3xl border border-border/80 p-5 shadow-sm bg-card space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b">
-              <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <Video className="h-3.5 w-3.5 text-primary" /> Lectures ({currentLectures.length})
-              </span>
-              <Button
-                size="sm"
-                disabled={!selectedChapter}
-                className="h-7 text-xs px-2.5 rounded-lg"
-                onClick={() => setLectureModalOpen(true)}
-              >
-                <Plus className="h-3 w-3 mr-1" /> Add Lecture
-              </Button>
+        {/* ================= COLUMN 3: CONTENT TABS (LECTURES, NOTES, PYQs) ================= */}
+        <div className="lg:col-span-4 space-y-4">
+          <Card className="rounded-3xl border border-border/80 p-5 shadow-sm bg-card space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-foreground truncate">
+                  Chapter Content: {selectedChapter ? selectedChapter.name : "Select Chapter"}
+                </span>
+              </div>
+
+              {/* Tabs for Lectures / Notes / PYQs */}
+              <Tabs value={curriculumTab} onValueChange={(v) => setCurriculumTab(v as any)} className="w-full">
+                <TabsList className="grid grid-cols-3 rounded-xl h-9 p-0.5">
+                  <TabsTrigger value="lectures" className="rounded-lg text-[11px] font-semibold gap-1">
+                    <Video className="h-3 w-3" /> Videos ({currentLectures.length})
+                  </TabsTrigger>
+                  <TabsTrigger value="notes" className="rounded-lg text-[11px] font-semibold gap-1">
+                    <FileText className="h-3 w-3" /> Notes ({currentNotes.length})
+                  </TabsTrigger>
+                  <TabsTrigger value="pyqs" className="rounded-lg text-[11px] font-semibold gap-1">
+                    <Award className="h-3 w-3 text-amber-500" /> PYQs ({currentPyqs.length})
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
 
-            <div className="space-y-2">
-              {!selectedChapter ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">Select a chapter to manage lectures.</p>
-              ) : currentLectures.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">No video lectures uploaded yet.</p>
-              ) : (
-                currentLectures.map((lec) => (
-                  <div key={lec.id} className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1.5 text-xs">
-                    <div className="flex items-center justify-between">
-                      {lec.isFreePreview ? (
-                        <Badge className="bg-emerald-500/10 text-emerald-600 border-none text-[9px] py-0">
-                          Free Preview
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-[9px] py-0 text-muted-foreground">
-                          Locked (Enrolled Only)
-                        </Badge>
-                      )}
-                      <span className="text-[10px] font-mono text-muted-foreground">{lec.duration}</span>
+            {/* TAB 1: LECTURES (YOUTUBE LINK) */}
+            {curriculumTab === "lectures" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs font-semibold text-muted-foreground">YouTube Video Lectures</span>
+                  <Button
+                    size="sm"
+                    disabled={!selectedChapter}
+                    className="h-7 text-xs px-2.5 rounded-lg"
+                    onClick={() => setLectureModalOpen(true)}
+                  >
+                    <Plus className="h-3 w-3 mr-1" /> Add Video Link
+                  </Button>
+                </div>
+
+                <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+                  {!selectedChapter ? (
+                    <p className="text-xs text-muted-foreground py-4 text-center">Select a chapter to manage video lectures.</p>
+                  ) : currentLectures.length === 0 ? (
+                    <div className="p-6 text-center border border-dashed rounded-2xl text-xs text-muted-foreground space-y-2">
+                      <Video className="h-6 w-6 text-primary mx-auto opacity-50" />
+                      <p>Aap YouTube unlisted link ya video link yahan add kar sakte hain.</p>
+                      <Button size="sm" variant="outline" className="rounded-xl text-xs" onClick={() => setLectureModalOpen(true)}>
+                        + Add First Video
+                      </Button>
                     </div>
+                  ) : (
+                    currentLectures.map((lec) => (
+                      <div key={lec.id} className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1.5 text-xs">
+                        <div className="flex items-center justify-between">
+                          {lec.isFreePreview ? (
+                            <Badge className="bg-emerald-500/10 text-emerald-600 border-none text-[9px] py-0">
+                              Free Preview
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[9px] py-0 text-muted-foreground">
+                              Locked (Enrolled Only)
+                            </Badge>
+                          )}
+                          <span className="text-[10px] font-mono text-muted-foreground">{lec.duration}</span>
+                        </div>
 
-                    <div className="font-semibold text-foreground line-clamp-2">{lec.title}</div>
+                        <div className="font-semibold text-foreground line-clamp-2">{lec.title}</div>
 
-                    <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-5 w-5 text-muted-foreground hover:text-foreground"
-                          title="Move Up"
-                          onClick={() => reorderList(lectures, lectures.findIndex(l => l.id === lec.id), "up", setLectures)}
-                        >
-                          <ChevronUp className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-5 w-5 text-muted-foreground hover:text-foreground"
-                          title="Move Down"
-                          onClick={() => reorderList(lectures, lectures.findIndex(l => l.id === lec.id), "down", setLectures)}
-                        >
-                          <ChevronDown className="h-3 w-3" />
-                        </Button>
-                        <a href={lec.videoUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1 ml-1">
-                          <Video className="h-3 w-3" /> Test Link
-                        </a>
+                        <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-5 w-5 text-muted-foreground hover:text-foreground"
+                              title="Move Up"
+                              onClick={() => reorderList(lectures, lectures.findIndex(l => l.id === lec.id), "up", setLectures)}
+                            >
+                              <ChevronUp className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-5 w-5 text-muted-foreground hover:text-foreground"
+                              title="Move Down"
+                              onClick={() => reorderList(lectures, lectures.findIndex(l => l.id === lec.id), "down", setLectures)}
+                            >
+                              <ChevronDown className="h-3 w-3" />
+                            </Button>
+                            <a href={lec.videoUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline flex items-center gap-1 ml-1 font-medium">
+                              <ExternalLink className="h-3 w-3" /> Open Link
+                            </a>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5 text-destructive rounded-md"
+                            onClick={() => setLectures(lectures.filter((x) => x.id !== lec.id))}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-5 w-5 text-destructive rounded-md"
-                        onClick={() => setLectures(lectures.filter((x) => x.id !== lec.id))}
-                      >
-                        <Trash2 className="h-3 w-3" />
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* TAB 2: PDF NOTES */}
+            {curriculumTab === "notes" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Chapter Study Notes & Formula Sheets</span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={!selectedChapter}
+                    className="h-7 text-xs px-2.5 rounded-lg border-emerald-500/30 text-emerald-600 hover:bg-emerald-500/10"
+                    onClick={() => setNoteModalOpen(true)}
+                  >
+                    <Plus className="h-3 w-3 mr-1" /> Add PDF Note
+                  </Button>
+                </div>
+
+                <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+                  {!selectedChapter ? (
+                    <p className="text-xs text-muted-foreground py-4 text-center">Select a chapter to manage study notes.</p>
+                  ) : currentNotes.length === 0 ? (
+                    <div className="p-6 text-center border border-dashed rounded-2xl text-xs text-muted-foreground space-y-2">
+                      <FileText className="h-6 w-6 text-emerald-500 mx-auto opacity-50" />
+                      <p>Koi PDF note nahi hai. PDF link ya Drive link add karein.</p>
+                      <Button size="sm" variant="outline" className="rounded-xl text-xs" onClick={() => setNoteModalOpen(true)}>
+                        + Add First Note
                       </Button>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </Card>
+                  ) : (
+                    currentNotes.map((note) => (
+                      <div key={note.id} className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1 text-xs">
+                        <div className="font-semibold text-foreground line-clamp-1">{note.title}</div>
+                        <div className="flex items-center justify-between pt-1 text-[10px] text-muted-foreground">
+                          <a href={note.fileUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline flex items-center gap-1 font-medium">
+                            <ExternalLink className="h-3 w-3" /> View / Download PDF
+                          </a>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5 text-destructive rounded-md"
+                            onClick={() => setNotes(notes.filter((x) => x.id !== note.id))}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
 
-          {/* Notes List */}
-          <Card className="rounded-3xl border border-border/80 p-5 shadow-sm bg-card space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b">
-              <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <FileText className="h-3.5 w-3.5 text-emerald-500" /> PDF Notes ({currentNotes.length})
-              </span>
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={!selectedChapter}
-                className="h-7 text-xs px-2.5 rounded-lg"
-                onClick={() => setNoteModalOpen(true)}
-              >
-                <Plus className="h-3 w-3 mr-1" /> Add PDF
-              </Button>
-            </div>
+            {/* TAB 3: PYQ (PREVIOUS YEAR QUESTIONS) */}
+            {curriculumTab === "pyqs" && (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pt-1">
+                  <span className="text-xs font-semibold text-muted-foreground">Board & School PYQ Papers</span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={!selectedChapter}
+                    className="h-7 text-xs px-2.5 rounded-lg border-amber-500/30 text-amber-600 hover:bg-amber-500/10"
+                    onClick={() => setPyqModalOpen(true)}
+                  >
+                    <Plus className="h-3 w-3 mr-1" /> Add PYQ Paper
+                  </Button>
+                </div>
 
-            <div className="space-y-2">
-              {!selectedChapter ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">Select a chapter.</p>
-              ) : currentNotes.length === 0 ? (
-                <p className="text-xs text-muted-foreground py-2 text-center">No PDF notes uploaded.</p>
-              ) : (
-                currentNotes.map((note) => (
-                  <div key={note.id} className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1 text-xs">
-                    <div className="font-semibold text-foreground line-clamp-1">{note.title}</div>
-                    <div className="flex items-center justify-between pt-1 text-[10px] text-muted-foreground">
-                      <a href={note.fileUrl} target="_blank" rel="noopener noreferrer" className="text-emerald-600 hover:underline flex items-center gap-1 font-medium">
-                        <ExternalLink className="h-3 w-3" /> Open PDF
-                      </a>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-5 w-5 text-destructive rounded-md"
-                        onClick={() => setNotes(notes.filter((x) => x.id !== note.id))}
-                      >
-                        <Trash2 className="h-3 w-3" />
+                <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
+                  {!selectedChapter ? (
+                    <p className="text-xs text-muted-foreground py-4 text-center">Select a chapter to manage PYQ papers.</p>
+                  ) : currentPyqs.length === 0 ? (
+                    <div className="p-6 text-center border border-dashed rounded-2xl text-xs text-muted-foreground space-y-2">
+                      <Award className="h-6 w-6 text-amber-500 mx-auto opacity-50" />
+                      <p>Past years question papers (CBSE/Bihar Board/School) yahan add karein.</p>
+                      <Button size="sm" variant="outline" className="rounded-xl text-xs" onClick={() => setPyqModalOpen(true)}>
+                        + Add First PYQ
                       </Button>
                     </div>
-                  </div>
-                ))
-              )}
-            </div>
+                  ) : (
+                    currentPyqs.map((pyq) => (
+                      <div key={pyq.id} className="p-3 rounded-xl border border-border/80 bg-muted/20 space-y-1.5 text-xs">
+                        <div className="flex items-center justify-between">
+                          <Badge className="bg-amber-500/10 text-amber-600 border-none text-[9px] py-0">
+                            {pyq.boardExam}
+                          </Badge>
+                          <span className="text-[10px] font-bold text-foreground font-mono">Year {pyq.examYear}</span>
+                        </div>
+
+                        <div className="font-semibold text-foreground line-clamp-2">{pyq.title}</div>
+
+                        <div className="flex items-center justify-between pt-1 border-t border-border/50 text-[10px] text-muted-foreground">
+                          <a href={pyq.fileUrl} target="_blank" rel="noopener noreferrer" className="text-amber-600 hover:underline flex items-center gap-1 font-medium">
+                            <ExternalLink className="h-3 w-3" /> Open Question & Solution PDF
+                          </a>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-5 w-5 text-destructive rounded-md"
+                            onClick={() => handleDeletePyq(pyq.id, pyq.title)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </Card>
         </div>
       </div>
 
-      {/* CREATE BATCH MODAL */}
+      {/* ================= BATCH (CREATE / EDIT) MODAL ================= */}
       <Dialog open={batchModalOpen} onOpenChange={setBatchModalOpen}>
         <DialogContent className="rounded-3xl max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold">Create New Course Batch</DialogTitle>
+            <DialogTitle className="text-lg font-bold">
+              {editingBatchId ? "Edit Batch & Price Settings" : "Create New Course Batch"}
+            </DialogTitle>
             <DialogDescription className="text-xs">
-              Configure curriculum metadata, pricing, and key features.
+              Aap batch ka naam, target class, fee price aur features apne hisaab se set kar sakte hain.
             </DialogDescription>
           </DialogHeader>
 
@@ -654,10 +1043,46 @@ export default function BatchesCurriculumPage() {
               </div>
             </div>
 
+            {/* PRICING FIELDS - USER REQUESTED CONTROL */}
+            <div className="p-3.5 rounded-2xl bg-primary/[0.04] border border-primary/20 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" /> Batch Fee Settings
+                </span>
+                <span className="text-[10px] text-muted-foreground">0 rakhenge to &apos;Fee on Request&apos; dikhega</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Offer / Batch Fee (₹)</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 1000 or 0 for Contact"
+                    value={batchForm.price}
+                    onChange={(e) => setBatchForm({ ...batchForm, price: Number(e.target.value) })}
+                    className="rounded-xl text-xs font-bold"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold">Original Fee (₹) [Optional]</Label>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 1500 (optional)"
+                    value={batchForm.originalPrice}
+                    onChange={(e) => setBatchForm({ ...batchForm, originalPrice: Number(e.target.value) })}
+                    className="rounded-xl text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">Batch Duration</Label>
                 <Input
+                  placeholder="e.g. Full Session 2026-27 or Monthly"
                   value={batchForm.duration}
                   onChange={(e) => setBatchForm({ ...batchForm, duration: e.target.value })}
                   className="rounded-xl text-xs"
@@ -666,30 +1091,9 @@ export default function BatchesCurriculumPage() {
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">Batch Start Date</Label>
                 <Input
+                  placeholder="e.g. Admissions Open or 15 April"
                   value={batchForm.startDate}
                   onChange={(e) => setBatchForm({ ...batchForm, startDate: e.target.value })}
-                  className="rounded-xl text-xs"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Offer Price (₹) *</Label>
-                <Input
-                  type="number"
-                  required
-                  value={batchForm.price}
-                  onChange={(e) => setBatchForm({ ...batchForm, price: Number(e.target.value) })}
-                  className="rounded-xl text-xs font-bold"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Original Price (₹)</Label>
-                <Input
-                  type="number"
-                  value={batchForm.originalPrice}
-                  onChange={(e) => setBatchForm({ ...batchForm, originalPrice: Number(e.target.value) })}
                   className="rounded-xl text-xs"
                 />
               </div>
@@ -717,20 +1121,20 @@ export default function BatchesCurriculumPage() {
 
             <DialogFooter>
               <Button type="submit" className="rounded-2xl w-full text-xs font-semibold shadow-md">
-                Publish & Save Batch
+                {editingBatchId ? "Save Batch Changes & Update Homepage" : "Publish & Save New Batch"}
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* ADD LECTURE MODAL */}
+      {/* ================= ADD LECTURE MODAL ================= */}
       <Dialog open={lectureModalOpen} onOpenChange={setLectureModalOpen}>
         <DialogContent className="rounded-3xl max-w-md">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold">Add Video Lecture</DialogTitle>
+            <DialogTitle className="text-lg font-bold">Add YouTube Video Lecture</DialogTitle>
             <DialogDescription className="text-xs">
-              Attach a YouTube unlisted link or video stream to {selectedChapter?.name}.
+              Attach a YouTube video link or unlisted class recording to {selectedChapter?.name}.
             </DialogDescription>
           </DialogHeader>
 
@@ -739,7 +1143,7 @@ export default function BatchesCurriculumPage() {
               <Label className="text-xs font-semibold">Lecture Title *</Label>
               <Input
                 required
-                placeholder="e.g. Lecture 03: Lens Formula & Magnification"
+                placeholder="e.g. Lecture 03: Lens Formula & Numericals"
                 value={lectureForm.title}
                 onChange={(e) => setLectureForm({ ...lectureForm, title: e.target.value })}
                 className="rounded-xl text-xs"
@@ -755,6 +1159,9 @@ export default function BatchesCurriculumPage() {
                 onChange={(e) => setLectureForm({ ...lectureForm, videoUrl: e.target.value })}
                 className="rounded-xl text-xs font-mono"
               />
+              <span className="text-[10px] text-muted-foreground block">
+                Standard YouTube, unlisted, ya embed video URL paste karein.
+              </span>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -782,14 +1189,14 @@ export default function BatchesCurriculumPage() {
 
             <DialogFooter>
               <Button type="submit" className="rounded-2xl w-full text-xs font-semibold shadow-md">
-                Save Lecture
+                Save Video Lecture
               </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      {/* ADD NOTE MODAL */}
+      {/* ================= ADD NOTE MODAL ================= */}
       <Dialog open={noteModalOpen} onOpenChange={setNoteModalOpen}>
         <DialogContent className="rounded-3xl max-w-md">
           <DialogHeader>
@@ -815,7 +1222,7 @@ export default function BatchesCurriculumPage() {
               <Label className="text-xs font-semibold">PDF File URL *</Label>
               <Input
                 required
-                placeholder="https://.../notes.pdf"
+                placeholder="https://.../notes.pdf or Google Drive link"
                 value={noteForm.fileUrl}
                 onChange={(e) => setNoteForm({ ...noteForm, fileUrl: e.target.value })}
                 className="rounded-xl text-xs font-mono"
@@ -830,7 +1237,75 @@ export default function BatchesCurriculumPage() {
           </form>
         </DialogContent>
       </Dialog>
+
+      {/* ================= ADD PYQ MODAL ================= */}
+      <Dialog open={pyqModalOpen} onOpenChange={setPyqModalOpen}>
+        <DialogContent className="rounded-3xl max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold">Add Previous Year Questions (PYQ)</DialogTitle>
+            <DialogDescription className="text-xs">
+              Attach past board/school question papers and solved solution PDF for {selectedChapter?.name}.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSavePyq} className="space-y-4 pt-2">
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Paper Title *</Label>
+              <Input
+                required
+                placeholder="e.g. CBSE 2024 Board Solved Question Paper"
+                value={pyqForm.title}
+                onChange={(e) => setPyqForm({ ...pyqForm, title: e.target.value })}
+                className="rounded-xl text-xs"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Exam Year *</Label>
+                <Input
+                  required
+                  placeholder="e.g. 2024, 2023, 2022"
+                  value={pyqForm.examYear}
+                  onChange={(e) => setPyqForm({ ...pyqForm, examYear: e.target.value })}
+                  className="rounded-xl text-xs"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Board / Exam Type *</Label>
+                <select
+                  value={pyqForm.boardExam}
+                  onChange={(e) => setPyqForm({ ...pyqForm, boardExam: e.target.value })}
+                  className="flex h-9 w-full rounded-xl border border-input bg-background px-3 py-1 text-xs shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="CBSE Board">CBSE Board</option>
+                  <option value="Bihar Board">Bihar Board (BSEB)</option>
+                  <option value="ICSE Board">ICSE Board</option>
+                  <option value="School Annual">School Annual Exam</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-semibold">Question Paper PDF Link *</Label>
+              <Input
+                required
+                placeholder="https://.../pyq-2024.pdf or Google Drive link"
+                value={pyqForm.fileUrl}
+                onChange={(e) => setPyqForm({ ...pyqForm, fileUrl: e.target.value })}
+                className="rounded-xl text-xs font-mono"
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="submit" className="rounded-2xl w-full text-xs font-semibold shadow-md">
+                Publish PYQ Paper
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import type { Profile } from "@/types/database";
 
@@ -10,6 +11,30 @@ export interface AdminAuthResult {
 }
 
 export async function verifyAdminSession(): Promise<AdminAuthResult> {
+  const cookieStore = cookies();
+  const adminCookie = cookieStore.get("sta_admin_auth")?.value;
+
+  // Master password authenticated session
+  if (adminCookie === "true") {
+    return {
+      isAdmin: true,
+      user: { id: "master-admin-id", email: "admin@staclasses.com" },
+      profile: {
+        id: "master-admin-id",
+        full_name: "Master Admin",
+        phone: "+91 98765 43210",
+        class_grade: null,
+        avatar_url: null,
+        role: "admin",
+        is_approved: true,
+        is_blocked: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      isMockDev: true,
+    };
+  }
+
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
   // Local development / initial setup mode when Supabase credentials are placeholder

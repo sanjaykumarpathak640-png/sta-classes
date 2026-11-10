@@ -590,7 +590,7 @@ VALUES (
     '+91 87654 32109',
     '919876543210',
     'admissions@staclasses.com',
-    'Plot 42, Education Hub, Near Central Park, M.G. Road, Lucknow, Uttar Pradesh - 226001',
+    'Near Biryani Mahal, Block Ke Paas, Barh, Bihar - 803213',
     '#5B3DF5'
 ) ON CONFLICT (id) DO NOTHING;
 
@@ -676,10 +676,10 @@ ON CONFLICT DO NOTHING;
 -- Seed Batches & Features (Class 4th to 12th)
 INSERT INTO public.batches (id, name, category, class_level, description, price, original_price, duration, start_date, badge, is_popular, order_index, is_active)
 VALUES 
-('11111111-1111-1111-1111-111111111111', 'Class 4 & 5 Junior Foundation Program', 'junior', 'Class 4th – 5th', 'Nurturing curiosity, strong mental maths, basic science exploration, reading comprehension, and daily homework guidance.', 8999, 11999, '10 Months', '15 April 2026', 'Junior Foundation', false, 1, true),
-('22222222-2222-2222-2222-222222222222', 'Class 6, 7 & 8 Middle School Mastery', 'middle', 'Class 6th – 8th', 'Complete coverage of Science, Mathematics, English & Social Science with analytical skills for Olympiads and school exams.', 11999, 15999, '10 Months', '15 April 2026', 'Concept Booster', true, 2, true),
-('33333333-3333-3333-3333-333333333333', 'Class 9 & 10 Board Excellence Program', 'secondary', 'Class 9th & 10th', 'Targeted CBSE, ICSE & State Board preparation. Intensive focus on Science and Mathematics with past papers and sample drills.', 15999, 20999, '10 Months', '20 April 2026', 'Board Special', true, 3, true),
-('44444444-4444-4444-4444-444444444444', 'Class 11 & 12 Board & Career Foundation', 'senior', 'Class 11th & 12th', 'Advanced coaching for Science and Commerce streams. Structured to secure 95%+ in Board exams with strong fundamentals.', 19999, 25999, '10 Months', '01 May 2026', 'Senior Wing', false, 4, true)
+('11111111-1111-1111-1111-111111111111', 'Class 4 & 5 Junior Foundation Program', 'junior', 'Class 4th – 5th', 'Nurturing curiosity, strong mental maths, basic science exploration, reading comprehension, and daily homework guidance.', 0, 0, 'Full Session 2026–27', 'New Admissions Open', 'Junior Foundation', false, 1, true),
+('22222222-2222-2222-2222-222222222222', 'Class 6, 7 & 8 Middle School Mastery', 'middle', 'Class 6th – 8th', 'Complete coverage of Science, Mathematics, English & Social Science with analytical skills for Olympiads and school exams.', 0, 0, 'Full Session 2026–27', 'New Admissions Open', 'Concept Booster', true, 2, true),
+('33333333-3333-3333-3333-333333333333', 'Class 9 & 10 Board Excellence Program', 'secondary', 'Class 9th & 10th', 'Targeted CBSE, ICSE & State Board preparation. Intensive focus on Science and Mathematics with past papers and sample drills.', 0, 0, 'Full Session 2026–27', 'New Admissions Open', 'Board Special', true, 3, true),
+('44444444-4444-4444-4444-444444444444', 'Class 11 & 12 Board & Career Foundation', 'senior', 'Class 11th & 12th', 'Advanced coaching for Science and Commerce streams. Structured to secure 95%+ in Board exams with strong fundamentals.', 0, 0, 'Full Session 2026–27', 'New Admissions Open', 'Senior Wing', false, 4, true)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.batch_features (batch_id, feature_text, order_index) VALUES
@@ -707,4 +707,25 @@ INSERT INTO public.batch_features (batch_id, feature_text, order_index) VALUES
 ('44444444-4444-4444-4444-444444444444', 'Personalized Academic Mentor Support', 4),
 ('44444444-4444-4444-4444-444444444444', 'Complete Board Practical & Viva Guidance', 5)
 ON CONFLICT DO NOTHING;
+
+-- ==============================================================================
+-- 11. PREVIOUS YEAR QUESTIONS (PYQs) TABLE
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.pyqs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    chapter_id UUID REFERENCES public.chapters(id) ON DELETE CASCADE,
+    batch_id UUID REFERENCES public.batches(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    exam_year TEXT NOT NULL,
+    board_exam TEXT NOT NULL DEFAULT 'CBSE Board',
+    file_url TEXT NOT NULL,
+    solution_url TEXT,
+    order_index INT DEFAULT 1,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE public.pyqs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Admin full access on pyqs" ON public.pyqs FOR ALL TO authenticated USING (public.is_admin()) WITH CHECK (public.is_admin());
+CREATE POLICY "Students and public can view pyqs" ON public.pyqs FOR SELECT TO public USING (true);
+
 
