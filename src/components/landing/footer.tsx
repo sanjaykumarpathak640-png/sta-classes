@@ -21,7 +21,7 @@ export function Footer() {
               {siteContent.brand.shortDescription}
             </p>
             <div className="pt-2 text-xs text-muted-foreground">
-              <span className="font-semibold text-foreground">Campus:</span> {siteContent.contact.address}
+              <span className="font-semibold text-foreground">Tuition Center:</span> {siteContent.contact.address}
             </div>
           </div>
 
@@ -53,21 +53,27 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support & Legal */}
+          {/* Direct Admissions & Contact */}
           <div className="space-y-3">
-            <h4 className="font-bold text-sm text-foreground">Admissions</h4>
+            <h4 className="font-bold text-sm text-foreground">Direct Admissions</h4>
             <ul className="space-y-2 text-xs sm:text-sm text-muted-foreground">
               <li>
-                <span className="block font-medium text-foreground">Helpline:</span>
-                <span className="font-mono text-xs">{siteContent.contact.phone}</span>
+                <span className="block font-medium text-foreground">Direct Call:</span>
+                <a href={`tel:${siteContent.contact.phone}`} className="font-mono text-xs text-primary font-bold hover:underline">
+                  {siteContent.contact.phone}
+                </a>
               </li>
               <li>
                 <span className="block font-medium text-foreground">WhatsApp:</span>
-                <span className="font-mono text-xs">+{siteContent.contact.whatsappNumber}</span>
+                <a href={`https://wa.me/${siteContent.contact.whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="font-mono text-xs text-emerald-600 font-bold hover:underline">
+                  +{siteContent.contact.whatsappNumber}
+                </a>
               </li>
               <li>
                 <span className="block font-medium text-foreground">Email:</span>
-                <span className="text-xs">{siteContent.contact.email}</span>
+                <a href={`mailto:${siteContent.contact.email}`} className="text-xs hover:text-foreground break-all">
+                  {siteContent.contact.email}
+                </a>
               </li>
             </ul>
           </div>

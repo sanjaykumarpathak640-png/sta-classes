@@ -263,14 +263,14 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     tagline TEXT DEFAULT 'Empowering Minds, Shaping Achievers',
     short_description TEXT DEFAULT 'Premier coaching institute delivering concept-first learning, personalized attention, and proven academic excellence for Class 9–12 and competitive foundations.',
     logo_url TEXT,
-    phone TEXT DEFAULT '+91 98765 43210',
-    alternate_phone TEXT DEFAULT '+91 87654 32109',
-    whatsapp_number TEXT DEFAULT '919876543210',
-    whatsapp_prefilled_text TEXT DEFAULT 'Hello STA Classes! I would like to inquire about batch admissions.',
-    email TEXT DEFAULT 'admissions@staclasses.com',
-    address TEXT DEFAULT 'Plot 42, Education Hub, Near Central Park, M.G. Road, Lucknow, Uttar Pradesh - 226001',
-    working_hours TEXT DEFAULT 'Monday – Saturday: 8:00 AM – 8:00 PM | Sunday: 9:00 AM – 2:00 PM',
-    google_map_embed_url TEXT DEFAULT 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113911.23192078652!2d80.8715876008139!3d26.848596489370605!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin',
+    phone TEXT DEFAULT '+91 62016 30760',
+    alternate_phone TEXT DEFAULT '+91 62016 30760',
+    whatsapp_number TEXT DEFAULT '916201630760',
+    whatsapp_prefilled_text TEXT DEFAULT 'Hello Sir! I would like to inquire about Online & Offline tuition admission.',
+    email TEXT DEFAULT 'sanjaykumarpathak640@gmail.com',
+    address TEXT DEFAULT 'Near Biryani Mahal, Block Ke Paas, Barh, Bihar - 803213',
+    working_hours TEXT DEFAULT 'Monday – Saturday: 6:30 AM – 8:00 PM | Sunday: 7:30 AM – 1:30 PM',
+    google_map_embed_url TEXT DEFAULT 'https://maps.google.com/maps?q=Barh%2C%20Bihar%20Near%20Biryani%20Mahal&t=&z=15&ie=UTF8&iwloc=&output=embed',
     primary_color TEXT DEFAULT '#5B3DF5',
     social_links JSONB DEFAULT '{"youtube":"https://youtube.com/@staclasses","instagram":"https://instagram.com/staclasses","telegram":"https://t.me/staclasses","facebook":"https://facebook.com/staclasses"}'::jsonb,
     updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
@@ -586,25 +586,25 @@ VALUES (
     'STA Classes',
     'Strong Fundamentals. Personal Attention. Lifelong Success.',
     'Dedicated coaching institute for Class 4th to 12th students. We build unbreakable concept foundations, guide disciplined study habits, and ensure school & board exam excellence with small batches and personalized teacher mentorship.',
-    '+91 98765 43210',
-    '+91 87654 32109',
-    '919876543210',
-    'admissions@staclasses.com',
+    '+91 62016 30760',
+    '+91 62016 30760',
+    '916201630760',
+    'sanjaykumarpathak640@gmail.com',
     'Near Biryani Mahal, Block Ke Paas, Barh, Bihar - 803213',
     '#5B3DF5'
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Seed Section Settings
 INSERT INTO public.section_settings (section_key, is_visible, custom_title, custom_subtitle, order_index) VALUES
-('hero', true, 'Personalized Tuition & Concept Mastery', 'Admissions Open for Classes 4th to 12th', 1),
+('hero', true, 'Online & Offline Tuition Batches', 'Admissions Open for Classes 4th to 12th', 1),
 ('stats', true, 'Proven Track Record of Excellence', 'Our numbers speak for our dedication', 2),
-('batches', true, 'Explore Our Comprehensive Batches', 'Class 4th to 12th Academic & Board Batches', 3),
+('batches', true, 'Explore Our Comprehensive Batches', 'Class 4th to 12th Online & Offline Batches', 3),
 ('faculty', true, 'Learn from Experienced Mentors', 'Subject teachers dedicated to small-batch learning', 4),
 ('results', true, 'Our School & Board Achievers', 'Celebrating the champions of STA Classes', 5),
 ('testimonials', true, 'What Parents & Students Say', 'Honest experiences from our learning community', 6),
-('gallery', true, 'Life at STA Classes', 'Modern classrooms, labs, and student achievements', 7),
+('gallery', true, 'Life at STA Classes Tuition Center', 'Modern classrooms near Biryani Mahal, Barh', 7),
 ('faqs', true, 'Frequently Asked Questions', 'Clear answers to admissions, classes, and fees', 8),
-('contact', true, 'Visit Campus or Request Callback', 'Our counselors are available 7 days a week', 9)
+('contact', true, 'Tuition Visit & Direct Inquiry', 'Call or WhatsApp Sir directly at 6201630760', 9)
 ON CONFLICT (section_key) DO NOTHING;
 
 -- Seed Hero Slide

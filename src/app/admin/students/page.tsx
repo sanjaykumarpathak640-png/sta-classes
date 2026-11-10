@@ -552,7 +552,7 @@ export default function StudentsManagementPage() {
               <Input
                 required
                 type="tel"
-                placeholder="+91 98765 43210"
+                placeholder="+91 62016 30760"
                 value={newStudentForm.phone}
                 onChange={(e) => setNewStudentForm({ ...newStudentForm, phone: e.target.value })}
                 className="rounded-xl text-xs font-mono"

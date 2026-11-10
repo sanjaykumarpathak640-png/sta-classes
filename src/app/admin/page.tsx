@@ -51,10 +51,10 @@ export default function AdminDashboardPage() {
   ];
 
   const recentStudents = [
-    { name: "Aarav Patel", batch: "Class 10 Board Excellence", phone: "+91 98765 11111", status: "pending", time: "10 mins ago" },
-    { name: "Priya Sharma", batch: "Class 12th Science", phone: "+91 98765 22222", status: "pending", time: "25 mins ago" },
-    { name: "Kabir Mehta", batch: "JEE Foundation (Class 11)", phone: "+91 98765 33333", status: "approved", time: "1 hour ago" },
-    { name: "Ananya Dixit", batch: "Class 9th Foundation", phone: "+91 98765 44444", status: "approved", time: "3 hours ago" },
+    { name: "Aarav Patel", batch: "Class 10 Board Excellence", phone: "+91 62016 30760", status: "pending", time: "10 mins ago" },
+    { name: "Priya Sharma", batch: "Class 12th Science", phone: "+91 91234 56789", status: "pending", time: "25 mins ago" },
+    { name: "Kabir Mehta", batch: "Class 11 Science", phone: "+91 94312 87654", status: "approved", time: "1 hour ago" },
+    { name: "Ananya Dixit", batch: "Class 9th Foundation", phone: "+91 98350 12345", status: "approved", time: "3 hours ago" },
   ];
 
   const todayClasses = [

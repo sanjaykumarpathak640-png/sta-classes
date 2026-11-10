@@ -40,11 +40,22 @@ export function Navbar({ settings }: NavbarProps) {
 
   return (
     <>
+      {/* Top Prestigious Announcement Strip */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-amber-600 via-violet-700 to-indigo-700 text-white text-[10px] sm:text-xs py-1.5 px-3 text-center font-bold shadow-sm flex items-center justify-center gap-1.5 sm:gap-2">
+        <span className="flex h-2 w-2 rounded-full bg-amber-300 animate-ping shrink-0" />
+        <span className="truncate">
+          🔥 IIT Patna Students Visiting First Time Ever in Any Barh Coaching Institute! • Online & Offline Batches
+        </span>
+        <a href="tel:+916201630760" className="underline shrink-0 text-amber-200 hover:text-white font-extrabold ml-1">
+          Call: 6201630760
+        </a>
+      </div>
+
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-7 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled
-            ? "bg-background/85 backdrop-blur-md shadow-sm border-b border-border/80 py-3"
-            : "bg-transparent py-5"
+            ? "bg-background/90 backdrop-blur-md shadow-sm border-b border-border/80 py-2.5"
+            : "bg-transparent py-4"
         }`}
       >
         <div className="container mx-auto flex items-center justify-between px-4 sm:px-6">

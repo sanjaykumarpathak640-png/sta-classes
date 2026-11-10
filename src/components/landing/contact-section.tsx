@@ -35,9 +35,9 @@ export function ContactSection() {
       setSubmitted(true);
       toast({
         title: "Inquiry Received Successfully!",
-        description: "Our STA academic counselor will contact you within 2 working hours.",
+        description: "Sir will contact you directly on your phone/WhatsApp.",
       });
-    }, 900);
+    }, 800);
   };
 
   return (
@@ -46,13 +46,13 @@ export function ContactSection() {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4 mb-16">
           <Badge variant="outline" className="px-3.5 py-1 rounded-full text-xs font-semibold text-primary border-primary/25 bg-primary/5">
-            Connect with Us
+            Tuition Visit & Inquiry
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
-            Visit Campus or Request Callback
+            Tuition Visit & Direct Admissions
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Have questions about admissions, batch timings, or fee structure? Our academic counselors are here to help.
+            Online & Offline both batches available for Class 4th to 12th. Call or WhatsApp Sir directly for batch timings, fee details, and registration.
           </p>
         </div>
 
@@ -61,7 +61,7 @@ export function ContactSection() {
           <div className="lg:col-span-5 space-y-4">
             <Card className="rounded-3xl border border-border/80 p-6 shadow-sm bg-card space-y-5">
               <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-primary" /> Campus Office
+                <Sparkles className="h-4 w-4 text-primary" /> STA Tuition Center (Barh)
               </h3>
 
               <div className="space-y-4 text-xs sm:text-sm">
@@ -70,7 +70,7 @@ export function ContactSection() {
                     <MapPin className="h-4 w-4" />
                   </div>
                   <div>
-                    <div className="font-semibold text-foreground">{siteContent.contact.campusName}</div>
+                    <div className="font-semibold text-foreground">Tuition Center Location</div>
                     <div className="text-muted-foreground leading-relaxed mt-0.5">{siteContent.contact.address}</div>
                   </div>
                 </div>
@@ -80,9 +80,11 @@ export function ContactSection() {
                     <Phone className="h-4 w-4" />
                   </div>
                   <div>
-                    <div className="font-semibold text-foreground">Phone Support</div>
-                    <div className="text-muted-foreground font-mono">{siteContent.contact.phone}</div>
-                    <div className="text-muted-foreground font-mono">{siteContent.contact.alternatePhone}</div>
+                    <div className="font-semibold text-foreground">Direct Call / WhatsApp</div>
+                    <a href={`tel:${siteContent.contact.phone}`} className="text-primary font-mono font-bold hover:underline block">
+                      {siteContent.contact.phone}
+                    </a>
+                    <span className="text-[11px] text-muted-foreground">Call Sir directly for admission</span>
                   </div>
                 </div>
 
@@ -92,7 +94,9 @@ export function ContactSection() {
                   </div>
                   <div>
                     <div className="font-semibold text-foreground">Official Email</div>
-                    <div className="text-muted-foreground">{siteContent.contact.email}</div>
+                    <a href={`mailto:${siteContent.contact.email}`} className="text-muted-foreground hover:text-foreground break-all">
+                      {siteContent.contact.email}
+                    </a>
                   </div>
                 </div>
 
@@ -101,7 +105,7 @@ export function ContactSection() {
                     <Clock className="h-4 w-4" />
                   </div>
                   <div>
-                    <div className="font-semibold text-foreground">Counseling Hours</div>
+                    <div className="font-semibold text-foreground">Tuition Center Timings</div>
                     <div className="text-muted-foreground leading-relaxed">{siteContent.contact.workingHours}</div>
                   </div>
                 </div>
@@ -123,8 +127,8 @@ export function ContactSection() {
                     <MessageSquare className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="font-bold text-sm text-foreground">Chat Instantly on WhatsApp</div>
-                    <div className="text-xs text-muted-foreground">Direct line to Academic Dean</div>
+                    <div className="font-bold text-sm text-foreground">Chat on WhatsApp with Sir</div>
+                    <div className="text-xs text-muted-foreground font-mono font-bold text-emerald-600">+91 62016 30760</div>
                   </div>
                 </div>
                 <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 group-hover:translate-x-1 transition-transform">
@@ -137,9 +141,9 @@ export function ContactSection() {
           {/* Right Column: Callback Request Form */}
           <div className="lg:col-span-7">
             <Card className="rounded-3xl border border-border/80 p-6 sm:p-8 shadow-sm bg-card">
-              <h3 className="text-xl font-bold text-foreground mb-1">Request Admission Counseling</h3>
+              <h3 className="text-xl font-bold text-foreground mb-1">Direct Admission & Batch Inquiry</h3>
               <p className="text-xs sm:text-sm text-muted-foreground mb-6">
-                Fill this quick form and our academic team will provide complete batch timetables and curriculum syllabi.
+                Fill this quick form and Sir will provide complete online & offline batch timetables and curriculum syllabi.
               </p>
 
               {submitted ? (
@@ -178,8 +182,8 @@ export function ContactSection() {
                         id="phone"
                         type="tel"
                         required
-                        placeholder="e.g. 98765 43210"
-                        className="rounded-xl"
+                        placeholder="e.g. 62016 30760"
+                        className="rounded-xl font-mono text-xs"
                       />
                     </div>
                   </div>
@@ -190,19 +194,31 @@ export function ContactSection() {
                       <Input
                         id="targetClass"
                         required
-                        placeholder="e.g. Class 10th or JEE"
-                        className="rounded-xl"
+                        placeholder="e.g. Class 10th or Class 8th"
+                        className="rounded-xl text-xs"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <Label htmlFor="email" className="text-xs font-medium">Email Address (Optional)</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="rajesh@example.com"
-                        className="rounded-xl"
-                      />
+                      <Label htmlFor="batchMode" className="text-xs font-medium">Preferred Mode *</Label>
+                      <select
+                        id="batchMode"
+                        className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                      >
+                        <option value="both">Online & Offline Both</option>
+                        <option value="offline">Offline Tuition (Barh Center)</option>
+                        <option value="online">Online Live Classes (Web/App)</option>
+                      </select>
                     </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="email" className="text-xs font-medium">Email Address (Optional)</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="student@gmail.com"
+                      className="rounded-xl text-xs"
+                    />
                   </div>
 
                   <div className="space-y-1.5">
@@ -210,8 +226,8 @@ export function ContactSection() {
                     <Textarea
                       id="message"
                       rows={3}
-                      placeholder="Tell us about your learning goals or questions..."
-                      className="rounded-xl resize-none"
+                      placeholder="Aap kis subject ya exam ke liye tuition join karna chahte hain..."
+                      className="rounded-xl resize-none text-xs"
                     />
                   </div>
 
@@ -220,7 +236,7 @@ export function ContactSection() {
                     disabled={loading}
                     className="w-full rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md shadow-primary/25 h-11 text-sm gap-2"
                   >
-                    {loading ? "Sending..." : "Submit Inquiry"} <Send className="h-4 w-4" />
+                    {loading ? "Sending..." : "Submit Inquiry to Sir"} <Send className="h-4 w-4" />
                   </Button>
                 </form>
               )}
@@ -239,7 +255,7 @@ export function ContactSection() {
               allowFullScreen={false}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="STA Classes Campus Location"
+              title="STA Classes Tuition Center Barh Location"
             />
           </div>
         </div>

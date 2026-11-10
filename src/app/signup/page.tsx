@@ -77,12 +77,12 @@ export default function SignupPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="phone" className="text-xs font-semibold">WhatsApp Number *</Label>
+              <Label htmlFor="phone" className="text-xs font-semibold">WhatsApp / Mobile Number *</Label>
               <Input
                 id="phone"
                 type="tel"
                 required
-                placeholder="+91 98765 43210"
+                placeholder="+91 62016 30760"
                 value={form.phone}
                 onChange={(e) => setForm({ ...form, phone: e.target.value })}
                 className="rounded-xl text-xs font-mono"

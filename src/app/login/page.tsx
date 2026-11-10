@@ -102,7 +102,7 @@ function LoginFormContent() {
             <Input
               id="identifier"
               required
-              placeholder={role === "admin" ? "admin@staclasses.com" : "98765 43210 or student@mail.com"}
+              placeholder={role === "admin" ? "sanjaykumarpathak640@gmail.com" : "6201630760 or student@mail.com"}
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               className="rounded-xl text-xs"

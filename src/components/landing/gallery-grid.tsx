@@ -13,13 +13,13 @@ export function GalleryGrid() {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4 mb-16">
           <Badge variant="outline" className="px-3.5 py-1 rounded-full text-xs font-semibold text-primary border-primary/25 bg-primary/5">
-            Campus Life
+            Tuition Center Life
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
-            Life at STA Classes
+            Life at STA Classes Tuition Center
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Where academic dedication meets vibrant student mentorship and world-class classroom infrastructure.
+            Focused classrooms near Biryani Mahal, Block ke paas, Barh with modern teaching and IIT Patna student guest mentorship.
           </p>
         </div>
 

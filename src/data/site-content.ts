@@ -77,39 +77,39 @@ export const siteContent = {
     name: "STA Classes",
     tagline: "Strong Fundamentals. Personal Attention. Lifelong Success.",
     shortDescription:
-      "Dedicated coaching institute for Class 4th to 12th students. We build unbreakable concept foundations, guide disciplined study habits, and ensure school & board exam excellence with small batches and personalized teacher mentorship.",
+      "Premier tuition center for Class 4th to 12th in Barh, Bihar. Online & Offline both batches available with proven concept mastery and special guest mentorship by IIT Patna scholars.",
     foundedYear: 2012,
   },
 
   navigation: [
     { label: "Home", href: "#hero" },
-    { label: "Batches (Class 4-12)", href: "#batches" },
+    { label: "Batches (Online & Offline)", href: "#batches" },
     { label: "Faculty", href: "#faculty" },
     { label: "Toppers", href: "#results" },
     { label: "Parent Reviews", href: "#testimonials" },
-    { label: "Campus Gallery", href: "#gallery" },
+    { label: "Tuition Gallery", href: "#gallery" },
     { label: "FAQs", href: "#faqs" },
-    { label: "Contact", href: "#contact" },
+    { label: "Tuition Visit", href: "#contact" },
   ] as NavItem[],
 
   hero: {
-    badge: "Admissions Open for Classes 4th to 12th • Session 2026–27",
-    headline: "Personalized Tuition & Concept Mastery for",
+    badge: "🌟 Historic Milestone: IIT Patna Students Visiting First Time Ever in Any Barh Coaching Institute!",
+    headline: "Online & Offline Both Batches Available for",
     highlightWord: "Class 4 to 12",
     subheadline:
-      "Small batch learning where every child gets personal teacher guidance. Combining daily offline classroom teaching with our modern student mobile app for lecture replays, handwritten notes, weekly test series, and 1-on-1 doubt clearing.",
+      "Comprehensive tuition learning with personalized attention for every child. Regular interactive guest sessions by IIT Patna students — a first-time privilege in Barh! Offline classroom tuition near Biryani Mahal, Block ke paas, Barh + complete online live streaming for 100+ students with replays, notes, and 24x7 AI doubt solving.",
     primaryCta: {
-      text: "Enroll Your Child",
+      text: "Join / Inquire Batch",
       href: "#contact",
     },
     secondaryCta: {
-      text: "View Classes & Batches",
+      text: "Explore Class 4-12 Batches",
       href: "#batches",
     },
     statsSnippet: [
-      { label: "Grades Covered", value: "Class 4 to 12" },
-      { label: "Batch Size", value: "Max 20-25 Students" },
-      { label: "Doubt Support", value: "Daily 1-on-1" },
+      { label: "Batch Modes", value: "Online + Offline Both" },
+      { label: "Historic Highlight", value: "IIT Patna Mentorship" },
+      { label: "Direct Sir Helpline", value: "+91 62016 30760" },
     ],
   },
 
@@ -431,20 +431,20 @@ export const siteContent = {
       id: "faq-6",
       question: "What are the fee payment options and installment plans?",
       answer:
-        "We offer affordable monthly, quarterly, and annual fee installment options. Parents can pay conveniently online via UPI/Netbanking or at our campus desk with automated digital receipts.",
+        "We offer affordable monthly, quarterly, and annual fee installment options. Parents can pay conveniently online via UPI/QR code or directly at our tuition center desk with instant receipts.",
       category: "fees",
     },
   ] as FaqItem[],
 
   contact: {
-    campusName: "STA Classes Campus",
+    campusName: "STA Classes Tuition Center (Barh)",
     address: "Near Biryani Mahal, Block Ke Paas, Barh, Bihar - 803213",
-    phone: "+91 98765 43210",
-    alternatePhone: "+91 87654 32109",
-    whatsappNumber: "919876543210",
-    whatsappPreFilledText: "Hello STA Classes! I would like to inquire about admission for Class 4 to 12 in Barh.",
-    email: "admissions@staclasses.com",
-    workingHours: "Monday – Saturday: 7:00 AM – 7:30 PM | Sunday: 8:00 AM – 1:00 PM",
+    phone: "+91 62016 30760",
+    alternatePhone: "+91 62016 30760",
+    whatsappNumber: "916201630760",
+    whatsappPreFilledText: "Hello Sir! I would like to inquire about Online & Offline tuition admission for Class 4 to 12 in Barh.",
+    email: "sanjaykumarpathak640@gmail.com",
+    workingHours: "Monday – Saturday: 6:30 AM – 8:00 PM | Sunday: 7:30 AM – 1:30 PM",
     googleMapEmbedUrl:
       "https://maps.google.com/maps?q=Barh%2C%20Bihar%20Near%20Biryani%20Mahal&t=&z=15&ie=UTF8&iwloc=&output=embed",
     socialLinks: {

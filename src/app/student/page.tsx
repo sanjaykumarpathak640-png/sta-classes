@@ -46,7 +46,7 @@ export default function StudentPortalPage() {
   // Student Mock State
   const student = {
     name: "Aarav Patel",
-    phone: "+91 98765 11111",
+    phone: "+91 62016 30760",
     classGrade: "Class 10th",
     enrolledBatch: "Class 10 Board Excellence 2026-27",
     attendancePercent: 94,
@@ -235,11 +235,15 @@ export default function StudentPortalPage() {
                 <p className="text-xs text-muted-foreground mt-0.5">Faculty: Dr. Ananya Sharma</p>
               </div>
 
-              <div className="pt-2 flex items-center justify-between">
-                <span className="text-xs text-emerald-600 font-semibold">Join button activates 10m before start</span>
-                <Button asChild size="sm" className="rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs h-9 px-4 gap-1.5 shadow-md">
+              <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-emerald-600 font-bold">100+ Live Students Capacity</span>
+                  <span className="text-muted-foreground">• Low Latency Smooth Join</span>
+                </div>
+                <Button asChild size="sm" className="rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs h-9 px-4 gap-1.5 shadow-md shadow-red-500/20">
                   <a href="https://meet.google.com/xyz-uvwx-rst" target="_blank" rel="noopener noreferrer">
-                    <Radio className="h-3.5 w-3.5" /> Join Live Class
+                    <Radio className="h-3.5 w-3.5 animate-pulse" /> Join Live Stream Now (100+)
                   </a>
                 </Button>
               </div>
@@ -510,7 +514,7 @@ export default function StudentPortalPage() {
                   <Bot className="h-5 w-5 text-primary" /> Doubt Solving Desk
                 </h2>
                 <p className="text-xs text-muted-foreground">
-                  24x7 AI Mentor se turant samjhein ya apne campus teacher ko photo bhej kar poochhein
+                  24x7 AI Mentor se turant samjhein ya apne tuition teacher ko photo bhej kar poochhein
                 </p>
               </div>
 

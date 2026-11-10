@@ -13,7 +13,7 @@ export function WhatsAppFloatingButton() {
     <div className="fixed bottom-6 right-6 z-40 group">
       {/* Tooltip on Hover */}
       <span className="hidden sm:inline-block absolute right-16 top-1/2 -translate-y-1/2 bg-foreground text-background text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-        Chat with STA Counselor
+        WhatsApp Sir: 6201630760
       </span>
 
       {/* Floating Button */}

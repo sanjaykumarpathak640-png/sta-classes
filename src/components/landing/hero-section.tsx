@@ -11,7 +11,8 @@ import {
   Users, 
   Award,
   Video,
-  Star
+  Star,
+  Phone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -61,15 +62,22 @@ export function HeroSection() {
         >
           {/* Left Hero Column */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-            {/* Announcement Badge */}
+            {/* IIT Patna Historic Announcement Badge */}
+            <motion.div variants={itemVariants}>
+              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs sm:text-sm font-extrabold shadow-sm animate-pulse">
+                <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
+                <span>🔥 IIT Patna Students Visiting First Time Ever in Any Barh Coaching Institute!</span>
+              </div>
+            </motion.div>
+
+            {/* Online & Offline Badge */}
             <motion.div variants={itemVariants}>
               <Badge
                 variant="outline"
-                className="px-3.5 py-1.5 rounded-full text-xs font-semibold bg-background/80 backdrop-blur-md border-primary/25 shadow-sm text-foreground flex items-center gap-2"
+                className="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 border-primary/30 text-primary flex items-center gap-1.5"
               >
-                <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
-                <span>{siteContent.hero.badge}</span>
-                <Sparkles className="h-3 w-3 text-primary" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                <span>Online & Offline Both Batches Available • Class 4th to 12th</span>
               </Badge>
             </motion.div>
 
@@ -113,10 +121,10 @@ export function HeroSection() {
                 size="lg"
                 className="w-full sm:w-auto rounded-2xl border-border bg-background/60 hover:bg-muted font-semibold px-7 h-12 text-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
-                <Link href={siteContent.hero.secondaryCta.href}>
-                  <BookOpen className="h-4 w-4 mr-2 text-primary" />
-                  {siteContent.hero.secondaryCta.text}
-                </Link>
+                <a href={`tel:${siteContent.contact.phone}`}>
+                  <Phone className="h-4 w-4 mr-2 text-primary" />
+                  Call Sir: 6201630760
+                </a>
               </Button>
             </motion.div>
 
@@ -207,7 +215,10 @@ export function HeroSection() {
 
                   <div className="flex items-center justify-between text-[11px] text-slate-300">
                     <span>Er. S. T. Agrawal</span>
-                    <span className="font-mono">142 Students Attending</span>
+                    <span className="font-mono text-emerald-400 font-bold flex items-center gap-1">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      120+ Students Live
+                    </span>
                   </div>
                 </div>
 

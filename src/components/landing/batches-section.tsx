@@ -197,9 +197,9 @@ export function BatchesSection() {
         {/* Bottom Banner */}
         <div className="mt-12 text-center">
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Looking for specialized 1-on-1 personal tutoring or customized test series?{" "}
-            <Link href="#contact" className="text-primary font-semibold hover:underline">
-              Contact our Counselor →
+            Online & Offline dono batches available hain. Direct batch timing ya admission ke liye:{" "}
+            <Link href="#contact" className="text-primary font-bold hover:underline">
+              Call or WhatsApp Sir (+91 62016 30760) →
             </Link>
           </p>
         </div>
