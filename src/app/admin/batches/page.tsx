@@ -148,7 +148,7 @@ export default function BatchesCurriculumPage() {
   const [batchForm, setBatchForm] = React.useState({
     title: "",
     classLevel: "Class 10th",
-    category: "class-10" as any,
+    category: "secondary" as any,
     description: "",
     price: 14999,
     originalPrice: 19999,
@@ -324,17 +324,17 @@ export default function BatchesCurriculumPage() {
           className="rounded-xl text-xs gap-1.5 shadow-md shadow-primary/20"
           onClick={() => {
             setBatchForm({
-              title: "Class 10 Intensive Batch 2026",
+              title: "Class 10 Intensive Batch",
               classLevel: "Class 10th",
-              category: "class-10",
-              description: "Complete course preparation with syllabus coverage, derivation booklets, and test series.",
+              category: "secondary" as any,
+              description: "Comprehensive subject coaching with full syllabus coverage, derivation booklets, and weekly tests.",
               price: 13999,
               originalPrice: 18999,
-              duration: "9 Months",
-              startDate: "01 May 2026",
-              badge: "New",
+              duration: "10 Months",
+              startDate: "15 April 2026",
+              badge: "New Batch",
               isPopular: false,
-              features: "Daily Live Lectures\nHandwritten Chapter Notes\nWeekly Mock Exams\n1-on-1 Doubt Sessions",
+              features: "Daily Live + Classroom Teaching\nHandwritten Chapter Notes\nWeekly Mock Exams\n1-on-1 Doubt Support",
             });
             setBatchModalOpen(true);
           }}
@@ -630,19 +630,44 @@ export default function BatchesCurriculumPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Category Wing *</Label>
+                <select
+                  value={batchForm.category}
+                  onChange={(e) => setBatchForm({ ...batchForm, category: e.target.value as any })}
+                  className="flex h-9 w-full rounded-xl border border-input bg-background px-3 py-1 text-xs shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  <option value="junior">Junior Wing (Class 4 – 5)</option>
+                  <option value="middle">Middle School (Class 6 – 8)</option>
+                  <option value="secondary">High School (Class 9 – 10)</option>
+                  <option value="senior">Senior Secondary (Class 11 – 12)</option>
+                </select>
+              </div>
+              <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">Class / Target Grade *</Label>
                 <Input
                   required
+                  placeholder="e.g. Class 7th or Class 10th"
                   value={batchForm.classLevel}
                   onChange={(e) => setBatchForm({ ...batchForm, classLevel: e.target.value })}
                   className="rounded-xl text-xs"
                 />
               </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">Batch Duration</Label>
                 <Input
                   value={batchForm.duration}
                   onChange={(e) => setBatchForm({ ...batchForm, duration: e.target.value })}
+                  className="rounded-xl text-xs"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold">Batch Start Date</Label>
+                <Input
+                  value={batchForm.startDate}
+                  onChange={(e) => setBatchForm({ ...batchForm, startDate: e.target.value })}
                   className="rounded-xl text-xs"
                 />
               </div>

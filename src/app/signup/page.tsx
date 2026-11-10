@@ -21,7 +21,7 @@ export default function SignupPage() {
     email: "",
     password: "",
     classGrade: "Class 10th",
-    batchName: "Class 10 Board Excellence 2026-27",
+    batchName: "Class 10 Board Excellence",
   });
 
   const handleSignup = (e: React.FormEvent) => {
@@ -104,21 +104,34 @@ export default function SignupPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <Label htmlFor="classGrade" className="text-xs font-semibold">Current Class / Grade *</Label>
-              <Input
+              <select
                 id="classGrade"
                 required
-                placeholder="e.g. Class 10th or 12th PCM"
                 value={form.classGrade}
                 onChange={(e) => setForm({ ...form, classGrade: e.target.value })}
-                className="rounded-xl text-xs"
-              />
+                className="flex h-9 w-full rounded-xl border border-input bg-background px-3 py-1 text-xs shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                <option value="Class 4th">Class 4th</option>
+                <option value="Class 5th">Class 5th</option>
+                <option value="Class 6th">Class 6th</option>
+                <option value="Class 7th">Class 7th</option>
+                <option value="Class 8th">Class 8th</option>
+                <option value="Class 9th">Class 9th</option>
+                <option value="Class 10th">Class 10th</option>
+                <option value="Class 11th Science">Class 11th Science</option>
+                <option value="Class 11th Commerce">Class 11th Commerce</option>
+                <option value="Class 11th Arts">Class 11th Arts</option>
+                <option value="Class 12th Science">Class 12th Science</option>
+                <option value="Class 12th Commerce">Class 12th Commerce</option>
+                <option value="Class 12th Arts">Class 12th Arts</option>
+              </select>
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="batch" className="text-xs font-semibold">Target Batch *</Label>
+              <Label htmlFor="batch" className="text-xs font-semibold">Target Batch / Subject *</Label>
               <Input
                 id="batch"
                 required
-                placeholder="Class 10 Board Excellence 2026-27"
+                placeholder="e.g. Science & Maths / All Subjects"
                 value={form.batchName}
                 onChange={(e) => setForm({ ...form, batchName: e.target.value })}
                 className="rounded-xl text-xs"
@@ -161,3 +174,4 @@ export default function SignupPage() {
     </div>
   );
 }
+

@@ -584,8 +584,8 @@ INSERT INTO public.site_settings (id, tuition_name, tagline, short_description, 
 VALUES (
     1,
     'STA Classes',
-    'Empowering Minds, Shaping Achievers',
-    'Premier coaching institute delivering concept-first learning, personalized attention, and proven academic excellence for Class 9–12 and competitive foundations.',
+    'Strong Fundamentals. Personal Attention. Lifelong Success.',
+    'Dedicated coaching institute for Class 4th to 12th students. We build unbreakable concept foundations, guide disciplined study habits, and ensure school & board exam excellence with small batches and personalized teacher mentorship.',
     '+91 98765 43210',
     '+91 87654 32109',
     '919876543210',
@@ -596,11 +596,11 @@ VALUES (
 
 -- Seed Section Settings
 INSERT INTO public.section_settings (section_key, is_visible, custom_title, custom_subtitle, order_index) VALUES
-('hero', true, 'Transform Your Potential into Top Ranks', 'Admissions Open for Session 2026-27', 1),
+('hero', true, 'Personalized Tuition & Concept Mastery', 'Admissions Open for Classes 4th to 12th', 1),
 ('stats', true, 'Proven Track Record of Excellence', 'Our numbers speak for our dedication', 2),
-('batches', true, 'Explore Our Comprehensive Batches', 'Curated curriculum for Board & Entrance success', 3),
-('faculty', true, 'Learn from Top Subject Experts', 'Mentors with 10+ years of proven teaching records', 4),
-('results', true, 'Our Top Rankers & Achievers', 'Celebrating the champions of STA Classes', 5),
+('batches', true, 'Explore Our Comprehensive Batches', 'Class 4th to 12th Academic & Board Batches', 3),
+('faculty', true, 'Learn from Experienced Mentors', 'Subject teachers dedicated to small-batch learning', 4),
+('results', true, 'Our School & Board Achievers', 'Celebrating the champions of STA Classes', 5),
 ('testimonials', true, 'What Parents & Students Say', 'Honest experiences from our learning community', 6),
 ('gallery', true, 'Life at STA Classes', 'Modern classrooms, labs, and student achievements', 7),
 ('faqs', true, 'Frequently Asked Questions', 'Clear answers to admissions, classes, and fees', 8),
@@ -610,13 +610,13 @@ ON CONFLICT (section_key) DO NOTHING;
 -- Seed Hero Slide
 INSERT INTO public.hero_slides (badge, headline, highlight_word, subheadline, primary_cta_text, primary_cta_href, secondary_cta_text, secondary_cta_href, order_index, is_active)
 VALUES (
-    'Admissions Open for Session 2026–27',
-    'Transform Your Potential into Top Ranks with',
-    'STA Classes',
-    'Experience structured offline and online learning designed for conceptual mastery. Live interactive sessions, detailed chapter notes, rigorous test series, and 1-on-1 doubt resolution.',
-    'Join Now',
+    'Admissions Open for Classes 4th to 12th • Session 2026–27',
+    'Personalized Tuition & Concept Mastery for',
+    'Class 4 to 12',
+    'Small batch learning where every child gets personal teacher guidance. Combining daily offline classroom teaching with our modern student mobile app for lecture replays, handwritten notes, weekly test series, and 1-on-1 doubt clearing.',
+    'Enroll Your Child',
     '#contact',
-    'Explore Batches',
+    'View Classes & Batches',
     '#batches',
     1,
     true
@@ -673,37 +673,38 @@ INSERT INTO public.gallery_images (title, category, image_url, aspect, order_ind
 ON CONFLICT DO NOTHING;
 
 -- Seed Batches & Features
+-- Seed Batches & Features (Class 4th to 12th)
 INSERT INTO public.batches (id, name, category, class_level, description, price, original_price, duration, start_date, badge, is_popular, order_index, is_active)
 VALUES 
-('11111111-1111-1111-1111-111111111111', 'Class 10 Board Excellence 2026-27', 'class-10', 'Class 10th', 'Full syllabus mastery of Science, Mathematics, English & Social Science with rigorous sample paper drills.', 14999, 19999, '10 Months', '15 April 2026', 'Most Popular', true, 1, true),
-('22222222-2222-2222-2222-222222222222', 'Class 12 Board + CUET Sprint', 'class-11-12', 'Class 12th', 'Specialized Physics, Chemistry, and Mathematics/Biology batch geared towards 95%+ in Boards and top CUET percentiles.', 18999, 24999, '10 Months', '20 April 2026', 'High Demand', false, 2, true),
-('33333333-3333-3333-3333-333333333333', 'JEE & NEET Early Foundation (Class 11)', 'competitive', 'Class 11th', 'Strengthen advanced problem-solving techniques in Mechanics, Organic Chemistry, Calculus, and Plant Physiology.', 22999, 29999, '1 Year', '1 May 2026', 'Target 2028', true, 3, true),
-('44444444-4444-4444-4444-444444444444', 'Class 9th Foundation & Olympiad', 'class-9', 'Class 9th', 'Build an unbreakable base in STEM. Ideal for Olympiad aspirants (NTSE, NSO, IMO) and early high school toppers.', 12999, 16999, '10 Months', '15 April 2026', 'Concept Booster', false, 4, true)
+('11111111-1111-1111-1111-111111111111', 'Class 4 & 5 Junior Foundation Program', 'junior', 'Class 4th – 5th', 'Nurturing curiosity, strong mental maths, basic science exploration, reading comprehension, and daily homework guidance.', 8999, 11999, '10 Months', '15 April 2026', 'Junior Foundation', false, 1, true),
+('22222222-2222-2222-2222-222222222222', 'Class 6, 7 & 8 Middle School Mastery', 'middle', 'Class 6th – 8th', 'Complete coverage of Science, Mathematics, English & Social Science with analytical skills for Olympiads and school exams.', 11999, 15999, '10 Months', '15 April 2026', 'Concept Booster', true, 2, true),
+('33333333-3333-3333-3333-333333333333', 'Class 9 & 10 Board Excellence Program', 'secondary', 'Class 9th & 10th', 'Targeted CBSE, ICSE & State Board preparation. Intensive focus on Science and Mathematics with past papers and sample drills.', 15999, 20999, '10 Months', '20 April 2026', 'Board Special', true, 3, true),
+('44444444-4444-4444-4444-444444444444', 'Class 11 & 12 Board & Career Foundation', 'senior', 'Class 11th & 12th', 'Advanced coaching for Science and Commerce streams. Structured to secure 95%+ in Board exams with strong fundamentals.', 19999, 25999, '10 Months', '01 May 2026', 'Senior Wing', false, 4, true)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.batch_features (batch_id, feature_text, order_index) VALUES
-('11111111-1111-1111-1111-111111111111', 'Daily Live + Classroom Sessions', 1),
-('11111111-1111-1111-1111-111111111111', 'Printed & In-App Study Modules', 2),
-('11111111-1111-1111-1111-111111111111', 'Weekly Chapter-Wise Mock Tests', 3),
-('11111111-1111-1111-1111-111111111111', 'Instant Photo Doubt Engine', 4),
-('11111111-1111-1111-1111-111111111111', 'Past 10 Years PYQ Marathon', 5),
+('11111111-1111-1111-1111-111111111111', 'Interactive Activity-Based Learning', 1),
+('11111111-1111-1111-1111-111111111111', 'Mental Maths & Speed Arithmetic Drills', 2),
+('11111111-1111-1111-1111-111111111111', 'English Grammar & Reading Habits', 3),
+('11111111-1111-1111-1111-111111111111', 'Daily Homework Assistance', 4),
+('11111111-1111-1111-1111-111111111111', 'Weekly Friendly Progress Quizzes', 5),
 
-('22222222-2222-2222-2222-222222222222', 'Concept Deep-Dive by Senior Mentors', 1),
-('22222222-2222-2222-2222-222222222222', 'Comprehensive Derivation Booklets', 2),
-('22222222-2222-2222-2222-222222222222', 'Bi-Weekly All-India Pattern Tests', 3),
-('22222222-2222-2222-2222-222222222222', 'Dedicated Personal Mentor', 4),
-('22222222-2222-2222-2222-222222222222', 'Board Answer Writing Workshops', 5),
+('22222222-2222-2222-2222-222222222222', 'NCERT & Exemplar Concept Building', 1),
+('22222222-2222-2222-2222-222222222222', 'Science Lab Demonstrations & Visual Models', 2),
+('22222222-2222-2222-2222-222222222222', 'Mathematics Step-by-Step Problem Solving', 3),
+('22222222-2222-2222-2222-222222222222', 'Weekly Chapter Revision Tests', 4),
+('22222222-2222-2222-2222-222222222222', 'Regular WhatsApp Updates for Parents', 5),
 
-('33333333-3333-3333-3333-333333333333', 'Advanced Level Question Banks', 1),
-('33333333-3333-3333-3333-333333333333', 'Speed & Accuracy Speed Drills', 2),
-('33333333-3333-3333-3333-333333333333', 'Computer-Based CBT Test Engine', 3),
-('33333333-3333-3333-3333-333333333333', 'Formula Sheets & Mind Maps', 4),
-('33333333-3333-3333-3333-333333333333', 'Parent-Teacher Monthly Review', 5),
+('33333333-3333-3333-3333-333333333333', 'In-Depth Chapter Analysis & Derivations', 1),
+('33333333-3333-3333-3333-333333333333', 'Handwritten Revision Notes & Formula Booklets', 2),
+('33333333-3333-3333-3333-333333333333', 'Weekly Subjective Answer Writing Practice', 3),
+('33333333-3333-3333-3333-333333333333', 'Past 10 Years Board Papers Solving', 4),
+('33333333-3333-3333-3333-333333333333', '1-on-1 Faculty Doubt Clearing After Class', 5),
 
-('44444444-4444-4444-4444-444444444444', 'Interactive Visual Animations', 1),
-('44444444-4444-4444-4444-444444444444', 'Hands-On Problem Solving', 2),
-('44444444-4444-4444-4444-444444444444', 'NCERT Exemplar & Olympiad Drills', 3),
-('44444444-4444-4444-4444-444444444444', 'Micro-quizzes after every lecture', 4),
-('44444444-4444-4444-4444-444444444444', 'Gamified Rank Leaderboards', 5)
+('44444444-4444-4444-4444-444444444444', 'Comprehensive Syllabus Coverage by Senior Mentors', 1),
+('44444444-4444-4444-4444-444444444444', 'NCERT Line-by-Line Decoded Study Notes', 2),
+('44444444-4444-4444-4444-444444444444', 'Bi-Weekly Timed Exam Pattern Tests', 3),
+('44444444-4444-4444-4444-444444444444', 'Personalized Academic Mentor Support', 4),
+('44444444-4444-4444-4444-444444444444', 'Complete Board Practical & Viva Guidance', 5)
 ON CONFLICT DO NOTHING;
 

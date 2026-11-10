@@ -30,13 +30,13 @@ export function BatchesSection() {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4 mb-12">
           <Badge variant="outline" className="px-3.5 py-1 rounded-full text-xs font-semibold text-primary border-primary/25 bg-primary/5">
-            Targeted Learning Programs
+            Class 4th to 12th Programs
           </Badge>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
             Explore Our Comprehensive Batches
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            Curated curriculum aligned with CBSE, ICSE, State Boards, and National Competitive Standards.
+            Curated curriculum for Class 4th to 12th aligned with CBSE, ICSE, and State Boards with small batch size for personal attention.
           </p>
 
           {/* Filter Pills */}
