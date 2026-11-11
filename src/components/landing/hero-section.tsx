@@ -74,11 +74,21 @@ export function HeroSection() {
             <motion.div variants={itemVariants}>
               <Badge
                 variant="outline"
-                className="px-3 py-1 rounded-full text-xs font-bold bg-primary/10 border-primary/30 text-primary flex items-center gap-1.5"
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-primary/10 border-primary/30 text-primary flex items-center gap-1.5"
               >
-                <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                <CheckCircle2 className="h-4 w-4 text-primary" />
                 <span>Online & Offline Both Batches Available • Class 4th to 12th</span>
               </Badge>
+            </motion.div>
+
+            {/* Grand STA CLASSES Brand Title */}
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-3">
+              <span className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent drop-shadow-sm">
+                STA CLASSES
+              </span>
+              <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/30 text-blue-700 dark:text-blue-300 text-xs sm:text-sm font-black uppercase tracking-widest shadow-sm">
+                Tuition Center • Barh
+              </span>
             </motion.div>
 
             {/* Headline */}

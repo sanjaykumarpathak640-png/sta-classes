@@ -118,6 +118,13 @@ export default function BatchesCurriculumPage() {
           setPyqs(parsedP);
         }
       }
+      const storedLectures = localStorage.getItem("sta_lectures_data");
+      if (storedLectures) {
+        const parsedL = JSON.parse(storedLectures);
+        if (Array.isArray(parsedL) && parsedL.length > 0) {
+          setLectures(parsedL);
+        }
+      }
     } catch {
       // fallback to initial
     }
@@ -213,6 +220,7 @@ export default function BatchesCurriculumPage() {
   const [lectureModalOpen, setLectureModalOpen] = React.useState(false);
   const [noteModalOpen, setNoteModalOpen] = React.useState(false);
   const [pyqModalOpen, setPyqModalOpen] = React.useState(false);
+  const [editingLectureId, setEditingLectureId] = React.useState<string | null>(null);
 
   // Form states
   const [batchForm, setBatchForm] = React.useState({
@@ -442,23 +450,63 @@ export default function BatchesCurriculumPage() {
     toast({ title: "Chapter Deleted", description: name });
   };
 
-  // ADD LECTURE (YOUTUBE LINK OR UPLOAD)
+  // Helper to extract YouTube 11-char ID
+  const extractYouTubeId = (url?: string): string | null => {
+    if (!url) return null;
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|live\/))([\w-]{11})/);
+    return match ? match[1] : null;
+  };
+
+  // ADD / EDIT LECTURE (YOUTUBE LINK)
   const handleSaveLecture = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedChapter) return;
-    const newLec: LectureItem = {
-      id: `lec-${Date.now()}`,
-      chapterId: selectedChapter.id,
-      title: lectureForm.title,
-      videoType: "youtube",
-      videoUrl: lectureForm.videoUrl,
-      duration: lectureForm.duration,
-      isFreePreview: lectureForm.isFreePreview,
-    };
-    setLectures([...lectures, newLec]);
+
+    let updated: LectureItem[];
+    if (editingLectureId) {
+      updated = lectures.map((l) =>
+        l.id === editingLectureId
+          ? {
+              ...l,
+              title: lectureForm.title,
+              videoUrl: lectureForm.videoUrl,
+              duration: lectureForm.duration,
+              isFreePreview: lectureForm.isFreePreview,
+            }
+          : l
+      );
+      toast({ title: "Video Lecture Updated!", description: lectureForm.title });
+    } else {
+      const newLec: LectureItem = {
+        id: `lec-${Date.now()}`,
+        chapterId: selectedChapter.id,
+        title: lectureForm.title,
+        videoType: "youtube",
+        videoUrl: lectureForm.videoUrl,
+        duration: lectureForm.duration,
+        isFreePreview: lectureForm.isFreePreview,
+      };
+      updated = [...lectures, newLec];
+      toast({ title: "YouTube Video Lecture Added!", description: newLec.title });
+    }
+
+    setLectures(updated);
+    try {
+      localStorage.setItem("sta_lectures_data", JSON.stringify(updated));
+    } catch {}
+
     setLectureModalOpen(false);
+    setEditingLectureId(null);
     setLectureForm({ title: "", videoUrl: "", duration: "45 mins", isFreePreview: false });
-    toast({ title: "Video Lecture Added!", description: newLec.title });
+  };
+
+  const handleDeleteLecture = (id: string, title: string) => {
+    const remaining = lectures.filter((x) => x.id !== id);
+    setLectures(remaining);
+    try {
+      localStorage.setItem("sta_lectures_data", JSON.stringify(remaining));
+    } catch {}
+    toast({ title: "Lecture Removed", description: title });
   };
 
   // ADD NOTE (PDF LINK)
@@ -806,7 +854,11 @@ export default function BatchesCurriculumPage() {
                     size="sm"
                     disabled={!selectedChapter}
                     className="h-7 text-xs px-2.5 rounded-lg"
-                    onClick={() => setLectureModalOpen(true)}
+                    onClick={() => {
+                      setEditingLectureId(null);
+                      setLectureForm({ title: "", videoUrl: "", duration: "45 mins", isFreePreview: false });
+                      setLectureModalOpen(true);
+                    }}
                   >
                     <Plus className="h-3 w-3 mr-1" /> Add Video Link
                   </Button>
@@ -819,7 +871,16 @@ export default function BatchesCurriculumPage() {
                     <div className="p-6 text-center border border-dashed rounded-2xl text-xs text-muted-foreground space-y-2">
                       <Video className="h-6 w-6 text-primary mx-auto opacity-50" />
                       <p>Aap YouTube unlisted link ya video link yahan add kar sakte hain.</p>
-                      <Button size="sm" variant="outline" className="rounded-xl text-xs" onClick={() => setLectureModalOpen(true)}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-xl text-xs"
+                        onClick={() => {
+                          setEditingLectureId(null);
+                          setLectureForm({ title: "", videoUrl: "", duration: "45 mins", isFreePreview: false });
+                          setLectureModalOpen(true);
+                        }}
+                      >
                         + Add First Video
                       </Button>
                     </div>
@@ -865,14 +926,35 @@ export default function BatchesCurriculumPage() {
                               <ExternalLink className="h-3 w-3" /> Open Link
                             </a>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 text-destructive rounded-md"
-                            onClick={() => setLectures(lectures.filter((x) => x.id !== lec.id))}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 text-primary hover:bg-primary/10 rounded-md"
+                              title="Edit Video Lecture"
+                              onClick={() => {
+                                setEditingLectureId(lec.id);
+                                setLectureForm({
+                                  title: lec.title,
+                                  videoUrl: lec.videoUrl,
+                                  duration: lec.duration,
+                                  isFreePreview: lec.isFreePreview,
+                                });
+                                setLectureModalOpen(true);
+                              }}
+                            >
+                              <Edit3 className="h-3.5 w-3.5" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 text-destructive hover:bg-destructive/10 rounded-md"
+                              title="Delete Video Lecture"
+                              onClick={() => handleDeleteLecture(lec.id, lec.title)}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     ))
@@ -1128,11 +1210,13 @@ export default function BatchesCurriculumPage() {
         </DialogContent>
       </Dialog>
 
-      {/* ================= ADD LECTURE MODAL ================= */}
+      {/* ================= ADD / EDIT LECTURE MODAL ================= */}
       <Dialog open={lectureModalOpen} onOpenChange={setLectureModalOpen}>
-        <DialogContent className="rounded-3xl max-w-md">
+        <DialogContent className="rounded-3xl max-w-lg">
           <DialogHeader>
-            <DialogTitle className="text-lg font-bold">Add YouTube Video Lecture</DialogTitle>
+            <DialogTitle className="text-lg font-bold">
+              {editingLectureId ? "Edit YouTube Video Lecture" : "Add YouTube Video Lecture"}
+            </DialogTitle>
             <DialogDescription className="text-xs">
               Attach a YouTube video link or unlisted class recording to {selectedChapter?.name}.
             </DialogDescription>
@@ -1154,15 +1238,36 @@ export default function BatchesCurriculumPage() {
               <Label className="text-xs font-semibold">YouTube URL / Video Link *</Label>
               <Input
                 required
-                placeholder="https://www.youtube.com/watch?v=..."
+                placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
                 value={lectureForm.videoUrl}
                 onChange={(e) => setLectureForm({ ...lectureForm, videoUrl: e.target.value })}
                 className="rounded-xl text-xs font-mono"
               />
               <span className="text-[10px] text-muted-foreground block">
-                Standard YouTube, unlisted, ya embed video URL paste karein.
+                Standard YouTube, unlisted, ya live streaming URL paste karein.
               </span>
             </div>
+
+            {/* Instant Live Player Preview */}
+            {extractYouTubeId(lectureForm.videoUrl) ? (
+              <div className="space-y-1.5 pt-1">
+                <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                  <CheckCircle2 className="h-3.5 w-3.5" /> Video Verified! Live Playable Preview:
+                </span>
+                <div className="rounded-2xl overflow-hidden border border-border/80 aspect-video bg-black shadow-inner">
+                  <iframe
+                    className="w-full h-full"
+                    src={`https://www.youtube-nocookie.com/embed/${extractYouTubeId(lectureForm.videoUrl)}`}
+                    title="Live YouTube Preview"
+                    allowFullScreen
+                  />
+                </div>
+              </div>
+            ) : lectureForm.videoUrl.trim().length > 5 ? (
+              <p className="text-[11px] text-amber-600 bg-amber-500/10 p-2.5 rounded-xl border border-amber-500/20">
+                ⚠️ Kripya valid YouTube video link daalein (e.g. youtube.com/watch?v=... ya youtu.be/...)
+              </p>
+            ) : null}
 
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
@@ -1189,7 +1294,7 @@ export default function BatchesCurriculumPage() {
 
             <DialogFooter>
               <Button type="submit" className="rounded-2xl w-full text-xs font-semibold shadow-md">
-                Save Video Lecture
+                {editingLectureId ? "Update Video Lecture" : "Save Video Lecture"}
               </Button>
             </DialogFooter>
           </form>

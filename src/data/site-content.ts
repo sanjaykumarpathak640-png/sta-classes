@@ -83,13 +83,11 @@ export const siteContent = {
 
   navigation: [
     { label: "Home", href: "#hero" },
-    { label: "Batches (Online & Offline)", href: "#batches" },
-    { label: "Faculty", href: "#faculty" },
-    { label: "Toppers", href: "#results" },
-    { label: "Parent Reviews", href: "#testimonials" },
+    { label: "Batches (Class 4-12)", href: "#batches" },
+    { label: "Toppers & Results", href: "#results" },
     { label: "Tuition Gallery", href: "#gallery" },
     { label: "FAQs", href: "#faqs" },
-    { label: "Tuition Visit", href: "#contact" },
+    { label: "Visit & Contact", href: "#contact" },
   ] as NavItem[],
 
   hero: {

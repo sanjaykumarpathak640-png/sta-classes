@@ -54,13 +54,65 @@ export default function StudentPortalPage() {
     overallProgress: 38,
   };
 
+  // Helper to convert any YouTube URL (watch, youtu.be, live, embed) to an embed URL
+  const getYouTubeEmbedUrl = (url?: string): string => {
+    if (!url) return "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?modestbranding=1&rel=0";
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|live\/))([\w-]{11})/);
+    if (match && match[1]) {
+      return `https://www.youtube-nocookie.com/embed/${match[1]}?autoplay=1&modestbranding=1&rel=0`;
+    }
+    if (url.includes("/embed/")) return url;
+    return url;
+  };
+
   // Video Lecture Player State
   const [activeLecture, setActiveLecture] = React.useState<{
     title: string;
     chapter: string;
     duration: string;
+    videoUrl: string;
     completed: boolean;
   } | null>(null);
+
+  // Enrolled lectures list synced from admin
+  const [enrolledLectures, setEnrolledLectures] = React.useState<Array<{
+    id: string;
+    chapterId?: string;
+    title: string;
+    videoUrl: string;
+    duration: string;
+    isFreePreview?: boolean;
+    completed?: boolean;
+  }>>([
+    {
+      id: "lec-1",
+      title: "Lecture 01: Introduction to Spherical Mirrors & Ray Diagrams",
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      duration: "48 mins",
+      isFreePreview: true,
+      completed: true,
+    },
+    {
+      id: "lec-2",
+      title: "Lecture 02: Mirror Formula & Numerical Problem Solving",
+      videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      duration: "54 mins",
+      isFreePreview: false,
+      completed: false,
+    },
+  ]);
+
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem("sta_lectures_data");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setEnrolledLectures(parsed);
+        }
+      }
+    } catch {}
+  }, []);
 
   // Ask Doubt Form
   const [doubtText, setDoubtText] = React.useState("");
@@ -97,7 +149,7 @@ export default function StudentPortalPage() {
     setDoubtsList([newDoubt, ...doubtsList]);
     setDoubtText("");
     toast({
-      title: "Doubt Submitted to Faculty!",
+      title: "Doubt Submitted Successfully!",
       description: "Teacher will review and answer in your doubt inbox.",
     });
   };
@@ -232,7 +284,7 @@ export default function StudentPortalPage() {
                 <h3 className="font-bold text-base text-foreground">
                   Carbon & Its Compounds: Hydrocarbons & Covalent Bonds
                 </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Faculty: Dr. Ananya Sharma</p>
+                <p className="text-xs text-muted-foreground mt-0.5">Subject: Science & Chemistry • Live Class</p>
               </div>
 
               <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -272,10 +324,12 @@ export default function StudentPortalPage() {
                 size="sm"
                 className="w-full rounded-2xl text-xs h-10 shadow-sm"
                 onClick={() => {
+                  const firstLec = enrolledLectures[0];
                   setActiveLecture({
-                    title: "Spherical Mirrors, Focal Length & Sign Conventions",
+                    title: firstLec?.title || "Spherical Mirrors, Focal Length & Sign Conventions",
                     chapter: "Light Reflection & Refraction",
-                    duration: "48 mins",
+                    duration: firstLec?.duration || "48 mins",
+                    videoUrl: firstLec?.videoUrl || "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
                     completed: false,
                   });
                   setActiveTab("batches");
@@ -315,15 +369,15 @@ export default function StudentPortalPage() {
                   {/* Embedded responsive YouTube video */}
                   <iframe
                     className="w-full h-full"
-                    src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?modestbranding=1&rel=0"
-                    title="STA Classes Lecture Player"
+                    src={getYouTubeEmbedUrl(activeLecture.videoUrl)}
+                    title={activeLecture.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
 
                   {/* Anti-Screen Recording Moving Watermark Overlay */}
-                  <div className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm text-white/50 text-[10px] font-mono px-2 py-0.5 rounded pointer-events-none">
-                    STA • {student.name} ({student.phone})
+                  <div className="absolute top-4 left-4 bg-black/50 backdrop-blur-sm text-white/70 text-[10px] font-mono px-2 py-0.5 rounded pointer-events-none">
+                    STA CLASSES • {student.name} ({student.phone})
                   </div>
                 </div>
 
@@ -374,47 +428,46 @@ export default function StudentPortalPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-bold text-sm text-foreground">Chapter 1: Light Reflection & Refraction</h4>
-                      <p className="text-xs text-muted-foreground mt-0.5">3 Lectures • 2 PDF Notes</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{enrolledLectures.length} Video Lectures • PDF Notes</p>
                     </div>
-                    <Badge className="bg-primary/10 text-primary border-none text-[10px]">66% Done</Badge>
+                    <Badge className="bg-primary/10 text-primary border-none text-[10px]">Active Chapter</Badge>
                   </div>
 
                   <div className="space-y-2 pt-2 border-t text-xs">
-                    <div
-                      className="p-3 rounded-2xl bg-muted/40 hover:bg-muted/70 transition-colors flex items-center justify-between cursor-pointer"
-                      onClick={() => {
-                        setActiveLecture({
-                          title: "Lecture 01: Introduction to Spherical Mirrors & Ray Diagrams",
-                          chapter: "Light Reflection & Refraction",
-                          duration: "48 mins",
-                          completed: true,
-                        });
-                      }}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Play className="h-4 w-4 text-primary shrink-0" />
-                        <span className="font-semibold text-foreground">Lecture 01: Spherical Mirrors & Ray Diagrams</span>
+                    {enrolledLectures.map((lec, idx) => (
+                      <div
+                        key={lec.id || idx}
+                        className={`p-3 rounded-2xl transition-colors flex items-center justify-between cursor-pointer ${
+                          activeLecture?.title === lec.title
+                            ? "bg-primary/10 border border-primary/30 shadow-sm"
+                            : "bg-muted/40 hover:bg-muted/70"
+                        }`}
+                        onClick={() => {
+                          setActiveLecture({
+                            title: lec.title,
+                            chapter: "Light Reflection & Refraction",
+                            duration: lec.duration,
+                            videoUrl: lec.videoUrl,
+                            completed: !!lec.completed,
+                          });
+                        }}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <Play className={`h-4 w-4 shrink-0 ${activeLecture?.title === lec.title ? "text-primary fill-primary" : "text-primary"}`} />
+                          <span className="font-semibold text-foreground">{lec.title}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono text-muted-foreground">{lec.duration}</span>
+                          {activeLecture?.title === lec.title ? (
+                            <span className="text-[10px] text-primary font-bold animate-pulse">PLAYING NOW 🔊</span>
+                          ) : lec.completed ? (
+                            <span className="text-[10px] text-emerald-600 font-bold">COMPLETED</span>
+                          ) : (
+                            <span className="text-[10px] text-primary font-bold">WATCH ▶</span>
+                          )}
+                        </div>
                       </div>
-                      <span className="text-[10px] text-emerald-600 font-bold">COMPLETED</span>
-                    </div>
-
-                    <div
-                      className="p-3 rounded-2xl bg-muted/40 hover:bg-muted/70 transition-colors flex items-center justify-between cursor-pointer"
-                      onClick={() => {
-                        setActiveLecture({
-                          title: "Lecture 02: Mirror Formula, Magnification & Numericals",
-                          chapter: "Light Reflection & Refraction",
-                          duration: "54 mins",
-                          completed: false,
-                        });
-                      }}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Play className="h-4 w-4 text-primary shrink-0" />
-                        <span className="font-semibold text-foreground">Lecture 02: Mirror Formula & Numericals</span>
-                      </div>
-                      <span className="text-[10px] text-primary font-bold">PLAY</span>
-                    </div>
+                    ))}
 
                     {/* PDF Note Download */}
                     <div className="p-3 rounded-2xl bg-emerald-500/[0.04] border border-emerald-500/20 flex items-center justify-between">
@@ -701,14 +754,14 @@ export default function StudentPortalPage() {
                         <Upload className="h-3.5 w-3.5 text-primary" /> Attach Question Photo
                       </Button>
                       <Button type="submit" size="sm" className="rounded-xl text-xs gap-1.5 shadow-md">
-                        <Send className="h-3.5 w-3.5" /> Submit to Faculty
+                        <Send className="h-3.5 w-3.5" /> Submit Question
                       </Button>
                     </div>
                   </form>
                 </Card>
 
                 <div className="space-y-3">
-                  <h3 className="font-bold text-sm text-foreground">Previous Questions to Faculty</h3>
+                  <h3 className="font-bold text-sm text-foreground">Previous Question History</h3>
                   {doubtsList.map((d) => (
                     <Card key={d.id} className="rounded-2xl border p-4 bg-card space-y-2 text-xs">
                       <div className="flex items-center justify-between">
@@ -720,7 +773,7 @@ export default function StudentPortalPage() {
                       <p className="text-foreground font-medium">{d.question}</p>
                       {d.answer && (
                         <div className="p-3 rounded-xl bg-primary/[0.04] border border-primary/20 text-muted-foreground mt-2">
-                          <span className="font-bold text-primary block mb-0.5">Faculty Response:</span>
+                          <span className="font-bold text-primary block mb-0.5">Teacher Response:</span>
                           {d.answer}
                         </div>
                       )}

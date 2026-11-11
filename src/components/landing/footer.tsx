@@ -9,13 +9,18 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-border/60">
           {/* Brand info */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="h-10 w-10 rounded-xl bg-primary text-white flex items-center justify-center shadow-md">
-                <GraduationCap className="h-5 w-5" />
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                <GraduationCap className="h-6 w-6" />
               </div>
-              <span className="font-extrabold text-xl tracking-tight text-foreground">
-                {siteContent.brand.name}
-              </span>
+              <div>
+                <span className="font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent block">
+                  STA CLASSES
+                </span>
+                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">
+                  Barh, Bihar (Class 4th to 12th)
+                </span>
+              </div>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-sm">
               {siteContent.brand.shortDescription}

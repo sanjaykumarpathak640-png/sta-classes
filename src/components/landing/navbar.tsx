@@ -60,17 +60,17 @@ export function Navbar({ settings }: NavbarProps) {
       >
         <div className="container mx-auto flex items-center justify-between px-4 sm:px-6">
           {/* Brand Logo */}
-          <Link href="#hero" className="flex items-center gap-2.5 group">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-primary to-violet-500 text-white flex items-center justify-center shadow-md shadow-primary/20 transition-transform group-hover:scale-105 duration-300">
-              <GraduationCap className="h-5 w-5" />
+          <Link href="#hero" className="flex items-center gap-3 group">
+            <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105 duration-300">
+              <GraduationCap className="h-6 w-6" />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-lg sm:text-xl tracking-tight text-foreground flex items-center gap-1">
-                {brandName}
-                <Sparkles className="h-3.5 w-3.5 text-primary" />
+              <span className="font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent flex items-center gap-1.5 drop-shadow-sm">
+                STA CLASSES
+                <Sparkles className="h-4 w-4 text-amber-500 fill-amber-400" />
               </span>
-              <span className="text-[10px] tracking-wider uppercase text-muted-foreground font-semibold">
-                Academic Excellence
+              <span className="text-[10px] sm:text-[11px] tracking-wider uppercase text-muted-foreground font-bold">
+                Tuition Center • Barh (Class 4-12)
               </span>
             </div>
           </Link>
@@ -81,7 +81,7 @@ export function Navbar({ settings }: NavbarProps) {
               <Link
                 key={item.href}
                 href={item.href}
-                className="px-3 py-1.5 text-xs xl:text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:bg-muted rounded-full transition-colors"
+                className="px-3 py-1.5 text-xs xl:text-sm font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/60 dark:hover:bg-muted rounded-full transition-colors"
               >
                 {item.label}
               </Link>
@@ -89,23 +89,23 @@ export function Navbar({ settings }: NavbarProps) {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2.5">
             <ThemeToggle />
             <Button
               asChild
-              variant="ghost"
               size="sm"
-              className="rounded-xl hover:bg-muted font-medium text-xs px-3"
+              className="rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm px-4 py-2 shadow-md shadow-blue-500/25 border border-sky-400/30 gap-1.5 transition-all hover:scale-105"
             >
-              <Link href="/login">
-                Student Login
+              <Link href="/login" className="flex items-center gap-1.5">
+                <GraduationCap className="h-4 w-4 text-sky-100" />
+                <span>Student Login</span>
               </Link>
             </Button>
             <Button
               asChild
               variant="outline"
               size="sm"
-              className="rounded-xl border-border hover:bg-muted font-medium text-xs px-3"
+              className="rounded-xl border-border hover:bg-muted font-bold text-xs px-3"
             >
               <Link href="/admin">
                 <ShieldCheck className="h-3.5 w-3.5 mr-1 text-primary" /> Admin
@@ -114,7 +114,7 @@ export function Navbar({ settings }: NavbarProps) {
             <Button
               asChild
               size="sm"
-              className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-xs shadow-md shadow-primary/25 gap-1.5 px-4"
+              className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-md shadow-primary/25 gap-1.5 px-4"
             >
               <Link href="#batches">
                 Join Now <ArrowRight className="h-3.5 w-3.5" />
@@ -161,10 +161,13 @@ export function Navbar({ settings }: NavbarProps) {
               <div>
                 <div className="flex items-center justify-between pb-6 border-b">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-9 w-9 rounded-xl bg-primary text-white flex items-center justify-center">
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-md">
                       <GraduationCap className="h-5 w-5" />
                     </div>
-                    <span className="font-bold text-base">{brandName}</span>
+                    <div>
+                      <span className="font-black text-xl bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block">STA CLASSES</span>
+                      <span className="text-[10px] text-muted-foreground font-bold uppercase">Barh, Bihar</span>
+                    </div>
                   </div>
                   <Button
                     variant="ghost"
@@ -178,31 +181,35 @@ export function Navbar({ settings }: NavbarProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5 pt-6">
+                  {/* Prominent Student Login Button in Mobile Drawer */}
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md shadow-blue-500/25 flex items-center justify-between mb-2"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <GraduationCap className="h-5 w-5 text-sky-100" />
+                      <span>Student Login Portal</span>
+                    </span>
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+
                   {siteContent.navigation.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-2.5 rounded-xl text-sm font-medium text-foreground hover:bg-muted transition-colors flex items-center justify-between"
+                      className="px-4 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors flex items-center justify-between"
                     >
                       <span>{item.label}</span>
                       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
                     </Link>
                   ))}
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-muted transition-colors flex items-center justify-between mt-2"
-                  >
-                    <span className="flex items-center gap-2">
-                      <GraduationCap className="h-4 w-4 text-primary" /> Student Portal
-                    </span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
+
                   <Link
                     href="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-primary hover:bg-primary/10 transition-colors flex items-center justify-between"
+                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-primary hover:bg-primary/10 transition-colors flex items-center justify-between mt-2"
                   >
                     <span className="flex items-center gap-2">
                       <ShieldCheck className="h-4 w-4" /> Admin Portal

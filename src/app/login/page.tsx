@@ -58,36 +58,46 @@ function LoginFormContent() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-background flex flex-col justify-center items-center p-4">
-      <Link href="/" className="flex items-center gap-2.5 mb-8 group">
-        <div className="h-11 w-11 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/25">
+    <div className="min-h-screen bg-gradient-to-b from-sky-50/60 via-background to-background dark:from-background flex flex-col justify-center items-center p-4">
+      <Link href="/" className="flex items-center gap-3 mb-8 group">
+        <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105">
           <GraduationCap className="h-6 w-6" />
         </div>
         <div>
-          <span className="font-extrabold text-xl text-foreground">STA Classes</span>
-          <span className="block text-[10px] text-muted-foreground uppercase tracking-widest font-semibold">
-            Learning Portal
+          <span className="font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent block">
+            STA CLASSES
+          </span>
+          <span className="block text-[11px] text-muted-foreground uppercase tracking-widest font-bold">
+            Tuition Learning Portal • Barh
           </span>
         </div>
       </Link>
 
-      <Card className="w-full max-w-md rounded-3xl border border-border/80 shadow-xl bg-card p-6 sm:p-8">
+      <Card className="w-full max-w-md rounded-3xl border border-border/80 shadow-2xl bg-card p-6 sm:p-8">
         <CardHeader className="p-0 pb-6 text-center space-y-1">
-          <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
-            Sign In to Your Account
+          <CardTitle className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
+            {role === "student" ? "Student Login" : "Admin Sign In"}
           </CardTitle>
-          <CardDescription className="text-xs">
-            Access your live classes, video lectures, and practice tests
+          <CardDescription className="text-xs sm:text-sm">
+            {role === "student"
+              ? "Access your live classes, YouTube video lectures, notes & 24x7 AI doubt solver"
+              : "Manage batches, add video links, tests, notes and website settings"}
           </CardDescription>
 
-          <div className="pt-3 flex justify-center">
+          <div className="pt-4 flex justify-center">
             <Tabs value={role} onValueChange={(v) => setRole(v as any)} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 rounded-xl h-10 p-1">
-                <TabsTrigger value="student" className="rounded-lg text-xs font-semibold">
-                  Student
+              <TabsList className="grid w-full grid-cols-2 rounded-2xl h-11 p-1 bg-muted/60">
+                <TabsTrigger
+                  value="student"
+                  className="rounded-xl text-xs font-bold gap-1.5 data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                >
+                  <GraduationCap className="h-4 w-4" /> Student Login
                 </TabsTrigger>
-                <TabsTrigger value="admin" className="rounded-lg text-xs font-semibold">
-                  Faculty / Admin
+                <TabsTrigger
+                  value="admin"
+                  className="rounded-xl text-xs font-bold gap-1.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                >
+                  <ShieldCheck className="h-4 w-4" /> Admin Panel
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -96,22 +106,22 @@ function LoginFormContent() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="identifier" className="text-xs font-semibold">
-              {role === "admin" ? "Admin Email Address" : "Registered Phone or Email"}
+            <Label htmlFor="identifier" className="text-xs font-bold">
+              {role === "admin" ? "Admin Email Address" : "Registered Mobile Number or Email"}
             </Label>
             <Input
               id="identifier"
               required
-              placeholder={role === "admin" ? "sanjaykumarpathak640@gmail.com" : "6201630760 or student@mail.com"}
+              placeholder={role === "admin" ? "sanjaykumarpathak640@gmail.com" : "e.g. 6201630760 or student@mail.com"}
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
-              className="rounded-xl text-xs"
+              className="rounded-xl text-xs sm:text-sm h-11"
             />
           </div>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password" className="text-xs font-semibold">
+              <Label htmlFor="password" className="text-xs font-bold">
                 {role === "admin" ? "Master Admin Password" : "Password"}
               </Label>
               <Link href="/forgot-password" className="text-[11px] text-primary font-medium hover:underline">
@@ -122,14 +132,14 @@ function LoginFormContent() {
               id="password"
               type="password"
               required
-              placeholder={role === "admin" ? "Enter admin password (e.g. admin123)" : "••••••••"}
+              placeholder={role === "admin" ? "Enter admin123" : "Enter your password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="rounded-xl text-xs font-mono"
+              className="rounded-xl text-xs sm:text-sm h-11 font-mono"
             />
             {role === "admin" && (
               <p className="text-[11px] text-primary bg-primary/5 p-2 rounded-lg border border-primary/20">
-                🔑 Master Admin Password: <code className="font-bold">admin123</code> (Settings me change kar sakte hain)
+                🔑 Master Admin Password: <code className="font-bold">admin123</code>
               </p>
             )}
           </div>
@@ -137,9 +147,9 @@ function LoginFormContent() {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md shadow-primary/20 h-11 text-xs gap-2 mt-2"
+            className="w-full rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold h-11 text-sm shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.01] gap-2 mt-2"
           >
-            {loading ? "Signing in..." : role === "admin" ? "Access Admin Panel" : "Login to Student App"}
+            {loading ? "Signing in..." : role === "admin" ? "Access Admin Panel" : "Login to Student Portal"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </form>
