@@ -42,7 +42,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-[92vh] pt-28 pb-16 md:pt-36 md:pb-24 flex items-center justify-center overflow-hidden"
+      className="relative min-h-[92vh] pt-36 pb-14 sm:pt-40 md:pt-44 md:pb-20 flex items-center justify-center overflow-hidden"
     >
       {/* Background Gradient Mesh & Floating Glow Orbs */}
       <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
@@ -62,11 +62,11 @@ export function HeroSection() {
         >
           {/* Left Hero Column */}
           <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-            {/* IIT Patna Historic Announcement Badge */}
+            {/* Admissions Open & IIT Mentorship Badge */}
             <motion.div variants={itemVariants}>
-              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs sm:text-sm font-extrabold shadow-sm animate-pulse">
+              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs sm:text-sm font-black shadow-sm">
                 <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
-                <span>🔥 IIT Patna Students Visiting First Time Ever in Any Barh Coaching Institute!</span>
+                <span>Admissions Open (Class 4th - 12th) • IIT Patna Guest Mentorship</span>
               </div>
             </motion.div>
 
@@ -159,7 +159,7 @@ export function HeroSection() {
                     <Star className="h-3 w-3 fill-amber-500" />
                     <span className="font-bold text-foreground text-xs ml-1">4.9 / 5</span>
                   </div>
-                  <span className="text-[10px]">Google Reviews</span>
+                  <span className="text-[10px]">Verified Academic Rating</span>
                 </div>
               </div>
 

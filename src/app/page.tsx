@@ -3,7 +3,7 @@ import { Navbar } from "@/components/landing/navbar";
 import { HeroSection } from "@/components/landing/hero-section";
 import { StatsSection } from "@/components/landing/stats-section";
 import { BatchesSection } from "@/components/landing/batches-section";
-import { ToppersCarousel } from "@/components/landing/toppers-carousel";
+import { OfflineBatchSection } from "@/components/landing/offline-batch-section";
 import { GalleryGrid } from "@/components/landing/gallery-grid";
 import { FaqSection } from "@/components/landing/faq-section";
 import { ContactSection } from "@/components/landing/contact-section";
@@ -26,7 +26,7 @@ export default async function Home() {
         {cms.sections.hero !== false && <HeroSection />}
         {cms.sections.stats !== false && <StatsSection />}
         {cms.sections.batches !== false && <BatchesSection />}
-        {cms.sections.results !== false && <ToppersCarousel />}
+        <OfflineBatchSection />
         {cms.sections.gallery !== false && <GalleryGrid />}
         {cms.sections.faqs !== false && <FaqSection />}
         {cms.sections.contact !== false && <ContactSection />}

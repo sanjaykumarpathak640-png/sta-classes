@@ -84,7 +84,7 @@ export const siteContent = {
   navigation: [
     { label: "Home", href: "#hero" },
     { label: "Batches (Class 4-12)", href: "#batches" },
-    { label: "Toppers & Results", href: "#results" },
+    { label: "Join Offline Batch", href: "#join-offline" },
     { label: "Tuition Gallery", href: "#gallery" },
     { label: "FAQs", href: "#faqs" },
     { label: "Visit & Contact", href: "#contact" },
