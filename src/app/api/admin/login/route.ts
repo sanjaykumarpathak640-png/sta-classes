@@ -20,19 +20,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // Set secure authentication cookie
-    cookies().set("sta_admin_auth", "sta_admin_authenticated_secure_token", {
-      httpOnly: false, // Accessible by client for UI state & server for validation
+    const response = NextResponse.json({
+      success: true,
+      message: "Master Admin access granted successfully!",
+    });
+
+    response.cookies.set("sta_admin_auth", "sta_admin_authenticated_secure_token", {
+      httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 30, // 30 days
     });
 
-    return NextResponse.json({
-      success: true,
-      message: "Master Admin access granted successfully!",
-    });
+    return response;
   } catch (error) {
     return NextResponse.json(
       { success: false, error: "Authentication service error" },

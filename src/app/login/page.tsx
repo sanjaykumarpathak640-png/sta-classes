@@ -56,12 +56,15 @@ function LoginFormContent() {
           return;
         }
 
+        if (typeof document !== "undefined") {
+          document.cookie = "sta_admin_auth=sta_admin_authenticated_secure_token; path=/; max-age=2592000; SameSite=Lax";
+        }
+
         toast({ 
           title: "Welcome, Master Admin!", 
           description: "Accessing STA Classes Control Deck with full privileges." 
         });
-        router.push("/admin");
-        router.refresh();
+        window.location.href = "/admin";
       } catch {
         setLoading(false);
         toast({
@@ -133,8 +136,8 @@ function LoginFormContent() {
             </Label>
             <Input
               id="identifier"
-              required
-              placeholder={role === "admin" ? "sanjaykumarpathak640@gmail.com" : "e.g. 6201630760 or student@mail.com"}
+              required={role === "student"}
+              placeholder={role === "admin" ? "sanjaykumarpathak640@gmail.com (Optional)" : "e.g. 6201630760 or student@mail.com"}
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               className="rounded-xl text-xs sm:text-sm h-11"

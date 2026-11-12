@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { GraduationCap, Menu, X, ArrowRight, Sparkles, ShieldCheck } from "lucide-react";
+import { GraduationCap, Menu, X, ArrowRight, Sparkles, ShieldCheck, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { siteContent } from "@/data/site-content";
@@ -92,7 +92,7 @@ export function Navbar({ settings }: NavbarProps) {
             </nav>
 
             {/* Right Action Buttons */}
-            <div className="hidden sm:flex items-center gap-2.5">
+            <div className="hidden sm:flex items-center gap-2">
               <ThemeToggle />
               <Button
                 asChild
@@ -102,6 +102,17 @@ export function Navbar({ settings }: NavbarProps) {
                 <Link href="/login" className="flex items-center gap-1.5">
                   <GraduationCap className="h-4 w-4 text-sky-100" />
                   <span>Student Login</span>
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="rounded-xl border-slate-300 dark:border-slate-700 font-bold text-xs px-3 py-2 gap-1.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                <Link href="/admin-login" className="flex items-center gap-1.5">
+                  <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span>Admin</span>
                 </Link>
               </Button>
               <Button
@@ -202,13 +213,24 @@ export function Navbar({ settings }: NavbarProps) {
                 </div>
               </div>
 
-              <div className="pt-6 border-t space-y-3">
+              <div className="pt-6 border-t space-y-2.5">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full rounded-xl border-slate-300 dark:border-slate-700 font-bold text-xs flex items-center justify-center gap-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Link href="/admin-login">
+                    <Lock className="h-4 w-4 text-muted-foreground" />
+                    <span>Admin Login (Master Access)</span>
+                  </Link>
+                </Button>
                 <Button
                   asChild
                   className="w-full rounded-xl bg-primary shadow-md shadow-primary/25"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  <Link href="#contact">Join Now</Link>
+                  <Link href="#join-offline">Join Now</Link>
                 </Button>
                 <Button
                   asChild

@@ -61,14 +61,19 @@ function AdminLoginForm() {
         return;
       }
 
+      // Set cookie in browser client directly as safeguard
+      if (typeof document !== "undefined") {
+        document.cookie = "sta_admin_auth=sta_admin_authenticated_secure_token; path=/; max-age=2592000; SameSite=Lax";
+      }
+
       toast({
         title: "Access Granted!",
         description: "Welcome Sir, opening STA Classes Control Deck...",
       });
 
-      const returnUrl = searchParams.get("from") || "/admin";
-      router.push(returnUrl);
-      router.refresh();
+      const rawReturn = searchParams.get("from");
+      const returnUrl = (rawReturn && rawReturn !== "/admin-login") ? rawReturn : "/admin";
+      window.location.href = returnUrl;
     } catch {
       setErrorMsg("Network error. Kripya dubara koshish karein.");
       setLoading(false);
