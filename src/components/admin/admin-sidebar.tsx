@@ -15,7 +15,8 @@ import {
   Bell, 
   GraduationCap,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  LogOut
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -159,7 +160,7 @@ export function AdminSidebar({ onItemClick }: AdminSidebarProps) {
       </div>
 
       {/* Footer Info & View Live Site link */}
-      <div className="p-3 border-t border-border/60 space-y-2">
+      <div className="p-3 border-t border-border/60 space-y-1">
         <Link
           href="/"
           target="_blank"
@@ -171,6 +172,18 @@ export function AdminSidebar({ onItemClick }: AdminSidebarProps) {
           </span>
           <ExternalLink className="h-3.5 w-3.5" />
         </Link>
+        <button
+          onClick={async () => {
+            await fetch("/api/admin/logout", { method: "POST" });
+            window.location.href = "/";
+          }}
+          className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-500/10 transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <LogOut className="h-3.5 w-3.5" />
+            Logout from Admin
+          </span>
+        </button>
         <div className="px-3 py-1 text-[10px] text-muted-foreground/70">
           STA Admin Suite v2.0 • Secured
         </div>

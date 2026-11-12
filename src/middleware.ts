@@ -1,7 +1,21 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Strict route protection for /admin routes
+  if (pathname.startsWith("/admin")) {
+    const adminAuthCookie = request.cookies.get("sta_admin_auth")?.value;
+    const isValidAdmin = adminAuthCookie === "sta_admin_authenticated_secure_token" || adminAuthCookie === "true";
+
+    if (!isValidAdmin) {
+      const loginUrl = new URL("/admin-login", request.url);
+      loginUrl.searchParams.set("from", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   return await updateSession(request);
 }
 

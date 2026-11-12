@@ -32,29 +32,51 @@ function LoginFormContent() {
     }
   }, [searchParams, toast]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      if (role === "admin") {
-        // Set admin master auth cookie & storage
-        document.cookie = "sta_admin_auth=true; path=/; max-age=2592000; SameSite=Lax";
-        try {
-          localStorage.setItem("sta_admin_authenticated", "true");
-        } catch {}
+    if (role === "admin") {
+      try {
+        const res = await fetch("/api/admin/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password }),
+        });
+
+        const data = await res.json();
+        setLoading(false);
+
+        if (!res.ok || !data.success) {
+          toast({
+            title: "Access Denied",
+            description: data.error || "Galat Admin Password! Kripya sahi password daalein.",
+            variant: "destructive",
+          });
+          return;
+        }
 
         toast({ 
           title: "Welcome, Master Admin!", 
           description: "Accessing STA Classes Control Deck with full privileges." 
         });
         router.push("/admin");
-      } else {
+        router.refresh();
+      } catch {
+        setLoading(false);
+        toast({
+          title: "Error",
+          description: "Network error. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      setTimeout(() => {
+        setLoading(false);
         toast({ title: "Welcome back!", description: "Loading student learning portal..." });
         router.push("/student");
-      }
-    }, 600);
+      }, 500);
+    }
   };
 
   return (
@@ -132,16 +154,11 @@ function LoginFormContent() {
               id="password"
               type="password"
               required
-              placeholder={role === "admin" ? "Enter admin123" : "Enter your password"}
+              placeholder={role === "admin" ? "Enter Master Password" : "Enter your password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-xl text-xs sm:text-sm h-11 font-mono"
             />
-            {role === "admin" && (
-              <p className="text-[11px] text-primary bg-primary/5 p-2 rounded-lg border border-primary/20">
-                🔑 Master Admin Password: <code className="font-bold">admin123</code>
-              </p>
-            )}
           </div>
 
           <Button

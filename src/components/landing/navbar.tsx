@@ -106,16 +106,6 @@ export function Navbar({ settings }: NavbarProps) {
               </Button>
               <Button
                 asChild
-                variant="outline"
-                size="sm"
-                className="rounded-xl border-border hover:bg-muted font-bold text-xs px-3"
-              >
-                <Link href="/admin">
-                  <ShieldCheck className="h-3.5 w-3.5 mr-1 text-primary" /> Admin
-                </Link>
-              </Button>
-              <Button
-                asChild
                 size="sm"
                 className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-xs shadow-md shadow-primary/25 gap-1.5 px-4"
               >
@@ -209,17 +199,6 @@ export function Navbar({ settings }: NavbarProps) {
                       <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
                     </Link>
                   ))}
-
-                  <Link
-                    href="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-2.5 rounded-xl text-sm font-bold text-primary hover:bg-primary/10 transition-colors flex items-center justify-between mt-2"
-                  >
-                    <span className="flex items-center gap-2">
-                      <ShieldCheck className="h-4 w-4" /> Admin Portal
-                    </span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
                 </div>
               </div>
 

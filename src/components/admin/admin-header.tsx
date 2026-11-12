@@ -10,7 +10,8 @@ import {
   ShieldCheck, 
   Sparkles,
   Search,
-  Plus
+  Plus,
+  LogOut
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -91,6 +92,21 @@ export function AdminHeader() {
             <div className="text-[10px] text-muted-foreground mt-0.5">Headmaster</div>
           </div>
         </div>
+
+        {/* Logout Button */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="rounded-xl text-xs text-red-600 hover:text-red-700 hover:bg-red-500/10 gap-1.5 h-8 px-2.5"
+          onClick={async () => {
+            await fetch("/api/admin/logout", { method: "POST" });
+            window.location.href = "/";
+          }}
+          title="Sign out from Admin"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          <span className="hidden md:inline">Logout</span>
+        </Button>
       </div>
     </header>
   );

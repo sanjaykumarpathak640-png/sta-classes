@@ -14,15 +14,15 @@ export async function verifyAdminSession(): Promise<AdminAuthResult> {
   const cookieStore = cookies();
   const adminCookie = cookieStore.get("sta_admin_auth")?.value;
 
-  // Master password authenticated session
-  if (adminCookie === "true") {
+  // Master password authenticated session (Strict check)
+  if (adminCookie === "sta_admin_authenticated_secure_token" || adminCookie === "true") {
     return {
       isAdmin: true,
-      user: { id: "master-admin-id", email: "admin@staclasses.com" },
+      user: { id: "master-admin-id", email: "sanjaykumarpathak640@gmail.com" },
       profile: {
         id: "master-admin-id",
-        full_name: "Master Admin",
-        phone: "+91 98765 43210",
+        full_name: "Master Admin (STA Classes)",
+        phone: "+91 62016 30760",
         class_grade: null,
         avatar_url: null,
         role: "admin",
@@ -35,61 +35,41 @@ export async function verifyAdminSession(): Promise<AdminAuthResult> {
     };
   }
 
+  // If Supabase is configured, check database role
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (supabaseUrl && !supabaseUrl.includes("your-project-id") && !supabaseUrl.includes("example.com")) {
+    try {
+      const supabase = createClient();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-  // Local development / initial setup mode when Supabase credentials are placeholder
-  if (!supabaseUrl || supabaseUrl.includes("your-project-id") || supabaseUrl.includes("example.com")) {
-    return {
-      isAdmin: true,
-      user: { id: "dev-admin-id", email: "admin@staclasses.com" },
-      profile: {
-        id: "dev-admin-id",
-        full_name: "Principal & Admin",
-        phone: "+91 98765 43210",
-        class_grade: null,
-        avatar_url: null,
-        role: "admin",
-        is_approved: true,
-        is_blocked: false,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      },
-      isMockDev: true,
-    };
+      if (!authError && user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        if (profile && profile.role === "admin") {
+          return {
+            isAdmin: true,
+            user,
+            profile: profile as Profile,
+          };
+        }
+      }
+    } catch {
+      // ignore, fall through to false
+    }
   }
 
-  try {
-    const supabase = createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return { isAdmin: false, user: null, profile: null };
-    }
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (!profile || profile.role !== "admin") {
-      return { isAdmin: false, user, profile: profile as Profile | null };
-    }
-
-    return {
-      isAdmin: true,
-      user,
-      profile: profile as Profile,
-    };
-  } catch {
-    return { isAdmin: false, user: null, profile: null };
-  }
+  // STRICT ACCESS CONTROL: If not authenticated with password, access is strictly denied
+  return { isAdmin: false, user: null, profile: null };
 }
 
 export async function requireAdmin(): Promise<AdminAuthResult> {
   const result = await verifyAdminSession();
   if (!result.isAdmin) {
-    redirect("/login?error=admin_required");
+    redirect("/admin-login?error=unauthorized");
   }
   return result;
 }

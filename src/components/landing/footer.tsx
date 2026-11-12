@@ -87,8 +87,12 @@ export function Footer() {
         {/* Bottom copyright line */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
           <p>© {new Date().getFullYear()} {siteContent.brand.name}. All rights reserved.</p>
-          <div className="flex items-center gap-1">
-            <span>Crafted with pride for young achievers</span>
+          <div className="flex items-center gap-3">
+            <span>Barh, Bihar</span>
+            <span>•</span>
+            <Link href="/admin-login" className="hover:text-primary transition-colors text-[11px] opacity-50 hover:opacity-100 flex items-center gap-1">
+              🔒 Staff Login
+            </Link>
           </div>
         </div>
       </div>
