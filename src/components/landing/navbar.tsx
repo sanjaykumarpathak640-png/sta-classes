@@ -16,8 +16,21 @@ interface NavbarProps {
 export function Navbar({ settings }: NavbarProps) {
   const [scrolled, setScrolled] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [studentSession, setStudentSession] = React.useState<{ name: string; classGrade: string } | null>(null);
 
   const brandName = settings?.tuition_name || siteContent.brand.name;
+
+  React.useEffect(() => {
+    try {
+      const stored = localStorage.getItem("sta_student_session");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed?.name) {
+          setStudentSession(parsed);
+        }
+      }
+    } catch {}
+  }, []);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -94,16 +107,29 @@ export function Navbar({ settings }: NavbarProps) {
             {/* Right Action Buttons */}
             <div className="hidden sm:flex items-center gap-2">
               <ThemeToggle />
-              <Button
-                asChild
-                size="sm"
-                className="rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm px-4 py-2 shadow-md shadow-blue-500/25 border border-sky-400/30 gap-1.5 transition-all hover:scale-105"
-              >
-                <Link href="/login" className="flex items-center gap-1.5">
-                  <GraduationCap className="h-4 w-4 text-sky-100" />
-                  <span>Student Login</span>
-                </Link>
-              </Button>
+              {studentSession ? (
+                <Button
+                  asChild
+                  size="sm"
+                  className="rounded-xl bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm px-3.5 py-2 shadow-md shadow-emerald-500/25 border border-emerald-400/30 gap-1.5 transition-all hover:scale-105"
+                >
+                  <Link href="/student" className="flex items-center gap-1.5">
+                    <GraduationCap className="h-4 w-4 text-emerald-100" />
+                    <span>{studentSession.name.split(" ")[0]} (Dashboard)</span>
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  asChild
+                  size="sm"
+                  className="rounded-xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 hover:from-sky-600 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm px-4 py-2 shadow-md shadow-blue-500/25 border border-sky-400/30 gap-1.5 transition-all hover:scale-105"
+                >
+                  <Link href="/login" className="flex items-center gap-1.5">
+                    <GraduationCap className="h-4 w-4 text-sky-100" />
+                    <span>Student Login</span>
+                  </Link>
+                </Button>
+              )}
               <Button
                 asChild
                 variant="outline"
@@ -186,18 +212,32 @@ export function Navbar({ settings }: NavbarProps) {
                 </div>
 
                 <div className="flex flex-col gap-1.5 pt-6">
-                  {/* Prominent Student Login Button in Mobile Drawer */}
-                  <Link
-                    href="/login"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md shadow-blue-500/25 flex items-center justify-between mb-2"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <GraduationCap className="h-5 w-5 text-sky-100" />
-                      <span>Student Login Portal</span>
-                    </span>
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
+                  {/* Prominent Student Login / Dashboard Button in Mobile Drawer */}
+                  {studentSession ? (
+                    <Link
+                      href="/student"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 text-white font-bold text-sm shadow-md shadow-emerald-500/25 flex items-center justify-between mb-2"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <GraduationCap className="h-5 w-5 text-emerald-100" />
+                        <span>Welcome, {studentSession.name} (Dashboard)</span>
+                      </span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="p-3.5 rounded-2xl bg-gradient-to-r from-sky-500 via-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md shadow-blue-500/25 flex items-center justify-between mb-2"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <GraduationCap className="h-5 w-5 text-sky-100" />
+                        <span>Student Login Portal</span>
+                      </span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  )}
 
                   {siteContent.navigation.map((item) => (
                     <Link

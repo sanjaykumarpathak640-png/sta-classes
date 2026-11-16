@@ -33,6 +33,7 @@ import {
   DialogFooter 
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { 
   updateStudentApprovalAction, 
@@ -64,6 +65,37 @@ export default function StudentsManagementPage() {
   const [selectedStudent, setSelectedStudent] = React.useState<StudentItem | null>(null);
   const [reportModalOpen, setReportModalOpen] = React.useState(false);
   const [addStudentModalOpen, setAddStudentModalOpen] = React.useState(false);
+  const [parentReportModalOpen, setParentReportModalOpen] = React.useState(false);
+  const [parentReportForm, setParentReportForm] = React.useState({
+    weeklyOverallPercent: 94,
+    monthlyOverallPercent: 92.5,
+    weeklyAttendancePercent: 100,
+    monthlyAttendancePercent: 96.2,
+    teacherRemark: "विद्यार्थी कक्षा में रोज़ समय पर उपस्थित रहता है और बहुत लगन से पढ़ता है। मैथ्स और साइंस में इसकी समझ बहुत गहरी है। अभिभावक से अनुरोध है कि घर पर रोज़ रात को 1.5 घंटे सेल्फ-स्टडी और फ़ॉर्मूला रिवीजन का समय तय करें।",
+    batchRank: "Rank #3 in Batch (Top 5%)",
+    reportingPeriod: "November 2026",
+  });
+
+  const handleSaveParentReport = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const dataToSave = {
+        weeklyOverallPercent: Number(parentReportForm.weeklyOverallPercent),
+        monthlyOverallPercent: Number(parentReportForm.monthlyOverallPercent),
+        weeklyAttendance: { attended: 6, total: 6, percent: Number(parentReportForm.weeklyAttendancePercent) },
+        monthlyAttendance: { attended: 25, total: 26, percent: Number(parentReportForm.monthlyAttendancePercent) },
+        teacherRemark: parentReportForm.teacherRemark,
+        batchRank: parentReportForm.batchRank,
+        reportingPeriod: parentReportForm.reportingPeriod,
+      };
+      localStorage.setItem("sta_student_custom_report", JSON.stringify(dataToSave));
+      toast({
+        title: "Parent Report Card Saved!",
+        description: "Student aur Parents ke dashboard me ye report live update ho chuki hai.",
+      });
+      setParentReportModalOpen(false);
+    } catch {}
+  };
 
   // Sample real-time students list
   const [students, setStudents] = React.useState<StudentItem[]>([
@@ -505,7 +537,16 @@ export default function StudentsManagementPage() {
                 </div>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 space-y-2">
+                <Button
+                  type="button"
+                  onClick={() => setParentReportModalOpen(true)}
+                  className="w-full rounded-2xl text-xs gap-1.5 bg-violet-600 hover:bg-violet-700 text-white font-bold shadow-md shadow-violet-500/20"
+                >
+                  <Award className="h-4 w-4" />
+                  <span>Edit / Update Parent Study Report (साप्ताहिक व मासिक रिपोर्ट सेट करें)</span>
+                </Button>
+
                 <Button
                   asChild
                   variant="outline"
@@ -597,6 +638,123 @@ export default function StudentsManagementPage() {
             <DialogFooter className="pt-2">
               <Button type="submit" className="rounded-2xl w-full text-xs font-semibold shadow-md">
                 Confirm & Enroll Student
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* EDIT PARENT & STUDENT REPORT MODAL */}
+      <Dialog open={parentReportModalOpen} onOpenChange={setParentReportModalOpen}>
+        <DialogContent className="rounded-3xl max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold flex items-center gap-2">
+              <Award className="h-5 w-5 text-violet-600" />
+              <span>Update Student Study Report for Parents</span>
+            </DialogTitle>
+            <DialogDescription className="text-xs">
+              Yahan se aap student ka weekly & monthly test score, attendance aur teacher feedback set kar sakte hain jo parents ko dikhega.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleSaveParentReport} className="space-y-4 pt-2 text-xs">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold">Weekly Test Score (%)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  required
+                  value={parentReportForm.weeklyOverallPercent}
+                  onChange={(e) => setParentReportForm({ ...parentReportForm, weeklyOverallPercent: Number(e.target.value) })}
+                  className="rounded-xl text-xs h-10 font-bold"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold">Monthly Test Score (%)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  required
+                  value={parentReportForm.monthlyOverallPercent}
+                  onChange={(e) => setParentReportForm({ ...parentReportForm, monthlyOverallPercent: Number(e.target.value) })}
+                  className="rounded-xl text-xs h-10 font-bold"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold">Weekly Attendance (%)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  required
+                  value={parentReportForm.weeklyAttendancePercent}
+                  onChange={(e) => setParentReportForm({ ...parentReportForm, weeklyAttendancePercent: Number(e.target.value) })}
+                  className="rounded-xl text-xs h-10"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold">Monthly Attendance (%)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  max="100"
+                  required
+                  value={parentReportForm.monthlyAttendancePercent}
+                  onChange={(e) => setParentReportForm({ ...parentReportForm, monthlyAttendancePercent: Number(e.target.value) })}
+                  className="rounded-xl text-xs h-10"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold">Batch Rank</Label>
+                <Input
+                  required
+                  value={parentReportForm.batchRank}
+                  onChange={(e) => setParentReportForm({ ...parentReportForm, batchRank: e.target.value })}
+                  className="rounded-xl text-xs h-10"
+                  placeholder="e.g. Rank #3 in Batch"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-bold">Reporting Month / Week</Label>
+                <Input
+                  required
+                  value={parentReportForm.reportingPeriod}
+                  onChange={(e) => setParentReportForm({ ...parentReportForm, reportingPeriod: e.target.value })}
+                  className="rounded-xl text-xs h-10"
+                  placeholder="e.g. November 2026"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-xs font-bold">
+                Teacher&apos;s Advice & Feedback for Parents (अभिभावक के लिए शिक्षक की विशेष टिप्पणी) *
+              </Label>
+              <Textarea
+                rows={3}
+                required
+                value={parentReportForm.teacherRemark}
+                onChange={(e) => setParentReportForm({ ...parentReportForm, teacherRemark: e.target.value })}
+                className="rounded-xl text-xs resize-none"
+                placeholder="Student ki padhai, attendance aur improvement ke baare me likhein..."
+              />
+            </div>
+
+            <DialogFooter className="pt-2">
+              <Button type="submit" className="rounded-2xl w-full text-xs font-bold bg-violet-600 hover:bg-violet-700 text-white shadow-md h-10">
+                Save & Publish Parent Report Card (लाइव अपडेट करें)
               </Button>
             </DialogFooter>
           </form>
