@@ -48,11 +48,11 @@ export function OfflineBatchSection() {
   ];
 
   return (
-    <section id="join-offline" className="py-16 md:py-24 relative bg-gradient-to-b from-background via-primary/[0.03] to-background border-t border-border/60 overflow-hidden">
-      {/* Background soft glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-primary/10 blur-3xl rounded-full pointer-events-none -z-10" />
+    <section id="join-offline" className="py-14 sm:py-20 md:py-24 relative bg-gradient-to-b from-background via-primary/[0.03] to-background border-t border-border/60 overflow-hidden w-full max-w-full">
+      {/* Background soft glow (Bounded for mobile) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[240px] sm:h-[350px] bg-primary/10 blur-3xl rounded-full pointer-events-none -z-10" />
 
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto px-3.5 sm:px-6 w-full max-w-full">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 mb-12 sm:mb-16">
           <Badge className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 border-amber-500/30 text-amber-900 dark:text-amber-200 gap-1.5 shadow-sm inline-flex">
@@ -86,7 +86,7 @@ export function OfflineBatchSection() {
         </div>
 
         {/* Highlight Card: Center Location & Instant Actions */}
-        <div className="rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/[0.04] p-6 sm:p-10 shadow-xl max-w-4xl mx-auto space-y-6 sm:space-y-8">
+        <div className="rounded-3xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/[0.04] p-4 sm:p-8 md:p-10 shadow-xl max-w-4xl mx-auto space-y-6 sm:space-y-8 w-full max-w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 items-center">
             {/* Left: Location & Details */}
             <div className="space-y-4 text-center md:text-left">

@@ -41,8 +41,8 @@ export function BatchesSection() {
   }, [activeCategory, batchesList]);
 
   return (
-    <section id="batches" className="py-20 md:py-28 relative">
-      <div className="container mx-auto px-4 sm:px-6">
+    <section id="batches" className="py-16 md:py-28 relative w-full max-w-full overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 w-full max-w-full">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4 mb-12">
           <Badge variant="outline" className="px-3.5 py-1 rounded-full text-xs font-semibold text-primary border-primary/25 bg-primary/5">

@@ -4,8 +4,8 @@ import { siteContent } from "@/data/site-content";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/80 bg-background pt-16 pb-12">
-      <div className="container mx-auto px-4 sm:px-6">
+    <footer className="border-t border-border/80 bg-background pt-14 pb-12 w-full max-w-full overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 w-full max-w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-border/60">
           {/* Brand info */}
           <div className="lg:col-span-2 space-y-4">

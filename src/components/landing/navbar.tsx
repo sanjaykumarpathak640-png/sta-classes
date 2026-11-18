@@ -54,39 +54,39 @@ export function Navbar({ settings }: NavbarProps) {
   return (
     <>
       {/* Combined Single Fixed Header Container to Prevent ANY Overlap */}
-      <div className="fixed top-0 left-0 right-0 z-50 flex flex-col">
+      <div className="fixed top-0 left-0 right-0 z-50 flex flex-col w-full max-w-full overflow-hidden">
         {/* Top Prestigious Announcement Strip */}
-        <div className="bg-gradient-to-r from-amber-600 via-violet-700 to-indigo-700 text-white text-[10px] sm:text-xs py-1.5 px-3 text-center font-bold shadow-sm flex items-center justify-center gap-1.5 sm:gap-2 shrink-0">
-          <span className="flex h-2 w-2 rounded-full bg-amber-300 animate-ping shrink-0" />
-          <span className="truncate">
-            🔥 IIT Patna Students Visiting First Time Ever in Any Barh Coaching Institute!
+        <div className="bg-gradient-to-r from-amber-600 via-violet-700 to-indigo-700 text-white text-[10px] sm:text-xs py-1.5 px-2.5 sm:px-3 text-center font-bold shadow-sm flex items-center justify-center gap-1.5 sm:gap-2 shrink-0 w-full max-w-full overflow-hidden">
+          <span className="flex h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-amber-300 animate-ping shrink-0" />
+          <span className="truncate min-w-0">
+            🔥 IIT Patna Students Visiting First Time Ever in Barh Coaching!
           </span>
           <a href="tel:+916201630760" className="underline shrink-0 text-amber-200 hover:text-white font-extrabold ml-1">
             Call: 6201630760
           </a>
         </div>
 
-        {/* Main Navbar (Always directly underneath announcement without hardcoded top offsets) */}
+        {/* Main Navbar */}
         <header
-          className={`w-full transition-all duration-300 ${
+          className={`w-full max-w-full transition-all duration-300 ${
             scrolled
               ? "bg-background/95 backdrop-blur-md shadow-md border-b border-border/80 py-2 sm:py-2.5"
-              : "bg-background/90 dark:bg-background/95 backdrop-blur-md border-b border-border/40 py-2.5 sm:py-3.5"
+              : "bg-background/90 dark:bg-background/95 backdrop-blur-md border-b border-border/40 py-2 sm:py-3.5"
           }`}
         >
-          <div className="container mx-auto flex items-center justify-between px-4 sm:px-6">
-            {/* Brand Logo */}
-            <Link href="#hero" className="flex items-center gap-2.5 sm:gap-3 group">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105 duration-300 shrink-0">
-                <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6" />
+          <div className="container mx-auto flex items-center justify-between px-3 sm:px-6 w-full max-w-full">
+            {/* Brand Logo (Responsive for small phones) */}
+            <Link href="#hero" className="flex items-center gap-2 sm:gap-3 group shrink min-w-0">
+              <div className="h-8 w-8 sm:h-11 sm:w-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/25 transition-transform group-hover:scale-105 duration-300 shrink-0">
+                <GraduationCap className="h-4 w-4 sm:h-6 sm:w-6" />
               </div>
-              <div className="flex flex-col">
-                <span className="font-black text-xl sm:text-2xl md:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent flex items-center gap-1 sm:gap-1.5 drop-shadow-sm">
+              <div className="flex flex-col min-w-0">
+                <span className="font-black text-base sm:text-2xl md:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent flex items-center gap-1 drop-shadow-sm truncate">
                   STA CLASSES
-                  <Sparkles className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-amber-500 fill-amber-400" />
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-amber-500 fill-amber-400 shrink-0" />
                 </span>
-                <span className="text-[9px] sm:text-[11px] tracking-wider uppercase text-muted-foreground font-bold">
-                  Tuition Center • Barh (Class 4-12)
+                <span className="text-[8px] sm:text-[10px] tracking-wider uppercase text-muted-foreground font-bold truncate">
+                  Tuition Center • Barh
                 </span>
               </div>
             </Link>

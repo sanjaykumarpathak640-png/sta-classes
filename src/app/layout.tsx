@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
@@ -10,20 +10,29 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#090d16" },
+  ],
+};
+
 export const metadata: Metadata = {
-  title: "STA Classes | Premium Coaching & Online Learning Platform",
+  title: "STA Classes | Premium Tuition & Online Learning Platform (Class 4-12)",
   description:
-    "Official online learning platform for STA Classes. Excellence in Class 9-12, Board Exams, and Competitive Entrance Preparation with expert mentorship, interactive live sessions, and curated notes.",
+    "Official learning portal for STA Classes, Barh (Bihar). Online and Offline batches for Class 4th to 12th with expert mentorship, interactive live sessions, daily study reports, and 24x7 AI doubts.",
   keywords: [
     "STA Classes",
-    "Coaching Institute",
-    "Online Tuition",
-    "Class 9 Coaching",
+    "STA Classes Barh",
+    "Tuition in Barh",
+    "Coaching Institute Barh",
+    "Class 4 to 12 Tuition",
     "Class 10 Board Prep",
-    "Class 11 Science",
-    "Class 12 Board Prep",
-    "JEE Foundation",
-    "NEET Foundation",
+    "Class 12 Science Coaching",
   ],
 };
 
@@ -33,8 +42,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.variable} font-sans antialiased min-h-screen bg-background text-foreground transition-colors duration-300`}>
+    <html lang="en" suppressHydrationWarning className="w-full max-w-full overflow-x-hidden">
+      <body className={`${poppins.variable} font-sans antialiased min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground transition-colors duration-300 relative`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange={false}>
           {children}
           <Toaster />

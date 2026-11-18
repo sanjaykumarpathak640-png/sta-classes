@@ -10,7 +10,7 @@ export function WhatsAppFloatingButton() {
   )}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 group">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 group pointer-events-auto">
       {/* Tooltip on Hover */}
       <span className="hidden sm:inline-block absolute right-16 top-1/2 -translate-y-1/2 bg-foreground text-background text-xs font-semibold px-3 py-1.5 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
         WhatsApp Sir: 6201630760

@@ -50,11 +50,38 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
+  *, *::before, *::after {
+    box-sizing: border-box;
   }
+
+  html {
+    max-width: 100vw;
+    width: 100%;
+    overflow-x: hidden !important;
+    position: relative;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    max-width: 100vw;
+    width: 100%;
+    overflow-x: hidden !important;
+    position: relative;
     font-feature-settings: "rlig" 1, "calt" 1;
+    touch-action: pan-y;
+  }
+
+  /* Responsive media elements */
+  img, svg, video, canvas, audio, iframe, embed, object {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Prevent text and tables from breaking viewport on small devices */
+  p, h1, h2, h3, h4, h5, h6, span, a {
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 }

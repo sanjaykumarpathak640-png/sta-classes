@@ -81,23 +81,23 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white flex flex-col justify-center items-center p-3 sm:p-4 w-full max-w-full overflow-x-hidden">
       {/* Brand Header */}
-      <Link href="/" className="flex items-center gap-3 mb-8 group">
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 transition-transform group-hover:scale-105">
-          <GraduationCap className="h-6 w-6" />
+      <Link href="/" className="flex items-center gap-3 mb-6 sm:mb-8 group">
+        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 transition-transform group-hover:scale-105 shrink-0">
+          <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6" />
         </div>
-        <div>
-          <span className="font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-400 via-indigo-300 to-violet-400 bg-clip-text text-transparent block">
+        <div className="min-w-0">
+          <span className="font-black text-xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-400 via-indigo-300 to-violet-400 bg-clip-text text-transparent block truncate">
             STA CLASSES
           </span>
-          <span className="block text-[10px] text-slate-400 uppercase tracking-widest font-bold">
+          <span className="block text-[10px] text-slate-400 uppercase tracking-widest font-bold truncate">
             Institute Administration
           </span>
         </div>
       </Link>
 
-      <Card className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-xl shadow-2xl p-6 sm:p-8 text-slate-100">
+      <Card className="w-full max-w-md rounded-3xl border border-slate-800 bg-slate-900/90 backdrop-blur-xl shadow-2xl p-4 sm:p-8 text-slate-100">
         <CardHeader className="p-0 pb-6 text-center space-y-2">
           <div className="mx-auto h-12 w-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 flex items-center justify-center mb-1">
             <Lock className="h-6 w-6" />

@@ -468,37 +468,37 @@ export default function StudentPortalPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-background pb-20 md:pb-8 flex flex-col">
+    <div className="min-h-screen bg-slate-50/50 dark:bg-background pb-20 md:pb-8 flex flex-col w-full max-w-full overflow-x-hidden relative">
       {/* Top Mobile Bar */}
-      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border/80 px-4 py-3 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-2.5">
-          <div className="h-9 w-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-md">
-            <GraduationCap className="h-5 w-5" />
+      <header className="sticky top-0 z-30 bg-background/95 backdrop-blur border-b border-border/80 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between shadow-sm w-full max-w-full overflow-hidden">
+        <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-md shrink-0">
+            <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5" />
           </div>
-          <div>
-            <div className="font-extrabold text-sm text-foreground flex items-center gap-1.5">
+          <div className="min-w-0">
+            <div className="font-extrabold text-xs sm:text-sm text-foreground flex items-center gap-1.5 truncate">
               <span>STA CLASSES</span>
-              <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-bold">
+              <span className="text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 font-bold shrink-0">
                 Live
               </span>
             </div>
-            <div className="text-[10px] text-muted-foreground font-semibold">
+            <div className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold truncate">
               {student.name} • {student.classGrade}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button
             onClick={() => setActiveTab("reports")}
-            className="text-[10px] font-bold px-2.5 py-1 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-500/20 transition-all flex items-center gap-1"
+            className="text-[10px] font-bold px-2 py-1 rounded-xl bg-violet-500/10 hover:bg-violet-500/20 text-violet-700 dark:text-violet-300 border border-violet-500/20 transition-all flex items-center gap-1"
           >
             <BarChart3 className="h-3 w-3" />
-            <span>Parent Report</span>
+            <span className="hidden xs:inline sm:inline">Parent</span> Report
           </button>
           <div 
             onClick={() => setActiveTab("profile")}
-            className="h-8 w-8 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-sm cursor-pointer"
+            className="h-8 w-8 rounded-full bg-gradient-to-tr from-sky-500 to-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-sm cursor-pointer shrink-0"
             title="Open Profile"
           >
             {student.name.charAt(0).toUpperCase()}
@@ -507,7 +507,7 @@ export default function StudentPortalPage() {
       </header>
 
       {/* Main Tab Views */}
-      <main className="flex-1 container max-w-4xl mx-auto p-4 sm:p-6 space-y-6">
+      <main className="flex-1 container max-w-4xl mx-auto p-3 sm:p-6 space-y-5 sm:space-y-6 w-full max-w-full overflow-x-hidden">
         {/* ================= HOME TAB ================= */}
         {activeTab === "home" && (
           <div className="space-y-6">
@@ -1480,7 +1480,7 @@ export default function StudentPortalPage() {
       </main>
 
       {/* Bottom Mobile Navigation Bar */}
-      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border/80 py-2 px-3 shadow-lg flex items-center justify-around">
+      <nav className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur border-t border-border/80 py-2 px-2 sm:px-3 shadow-lg flex items-center justify-around w-full max-w-full overflow-hidden">
         <button
           onClick={() => setActiveTab("home")}
           className={`flex flex-col items-center gap-1 p-1.5 rounded-xl text-[10px] font-semibold transition-colors ${

@@ -9,8 +9,8 @@ export function StatsSection() {
   const icons = [Users, Layers, TrendingUp, Calendar];
 
   return (
-    <section className="py-12 md:py-16 relative border-y border-border/60 bg-muted/20 dark:bg-muted/10">
-      <div className="container mx-auto px-4 sm:px-6">
+    <section className="py-10 md:py-16 relative border-y border-border/60 bg-muted/20 dark:bg-muted/10 w-full max-w-full overflow-hidden">
+      <div className="container mx-auto px-4 sm:px-6 w-full max-w-full">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {siteContent.stats.map((stat, idx) => {
             const Icon = icons[idx % icons.length];

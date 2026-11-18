@@ -146,22 +146,22 @@ function LoginFormContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sky-50/60 via-background to-background dark:from-background flex flex-col justify-center items-center p-4">
-      <Link href="/" className="flex items-center gap-3 mb-8 group">
-        <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105">
-          <GraduationCap className="h-6 w-6" />
+    <div className="min-h-screen bg-gradient-to-b from-sky-50/60 via-background to-background dark:from-background flex flex-col justify-center items-center p-3 sm:p-4 w-full max-w-full overflow-x-hidden">
+      <Link href="/" className="flex items-center gap-3 mb-6 sm:mb-8 group">
+        <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-violet-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/25 transition-transform group-hover:scale-105 shrink-0">
+          <GraduationCap className="h-5 w-5 sm:h-6 sm:w-6" />
         </div>
-        <div>
-          <span className="font-black text-2xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent block">
+        <div className="min-w-0">
+          <span className="font-black text-xl sm:text-3xl tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent block truncate">
             STA CLASSES
           </span>
-          <span className="block text-[11px] text-muted-foreground uppercase tracking-widest font-bold">
+          <span className="block text-[10px] sm:text-[11px] text-muted-foreground uppercase tracking-widest font-bold truncate">
             Tuition Learning Portal • Barh
           </span>
         </div>
       </Link>
 
-      <Card className="w-full max-w-md rounded-3xl border border-border/80 shadow-2xl bg-card p-6 sm:p-8">
+      <Card className="w-full max-w-md rounded-3xl border border-border/80 shadow-2xl bg-card p-4 sm:p-8">
         <CardHeader className="p-0 pb-6 text-center space-y-1">
           <CardTitle className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
             {role === "student" ? "Student Learning Portal" : "Admin Sign In"}

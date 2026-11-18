@@ -17,7 +17,7 @@ export default async function Home() {
   const cms = await getLandingPageContent();
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/20 selection:text-primary">
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-background text-foreground flex flex-col selection:bg-primary/20 selection:text-primary relative">
       {/* Sticky Scroll-Aware Navbar */}
       <Navbar settings={cms.settings} />
 

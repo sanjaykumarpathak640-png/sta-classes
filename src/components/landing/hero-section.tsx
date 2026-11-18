@@ -42,51 +42,51 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-[92vh] pt-36 pb-14 sm:pt-40 md:pt-44 md:pb-20 flex items-center justify-center overflow-hidden"
+      className="relative min-h-[90vh] pt-32 pb-12 sm:pt-40 md:pt-44 md:pb-20 flex items-center justify-center w-full max-w-full overflow-hidden"
     >
-      {/* Background Gradient Mesh & Floating Glow Orbs */}
-      <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[600px] md:w-[900px] h-[400px] md:h-[550px] bg-gradient-to-tr from-primary/20 via-violet-400/15 to-transparent blur-3xl rounded-full" />
-        <div className="absolute top-[30%] left-[-5%] w-[350px] h-[350px] bg-sky-400/10 blur-3xl rounded-full" />
-        <div className="absolute bottom-[10%] right-[-5%] w-[400px] h-[400px] bg-primary/15 blur-3xl rounded-full" />
+      {/* Background Gradient Mesh & Floating Glow Orbs (Bounded to prevent mobile spill) */}
+      <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden w-full max-w-full">
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[320px] sm:w-[600px] md:w-[900px] h-[300px] sm:h-[400px] md:h-[550px] bg-gradient-to-tr from-primary/20 via-violet-400/15 to-transparent blur-3xl rounded-full" />
+        <div className="absolute top-[30%] left-[-2%] w-[250px] sm:w-[350px] h-[250px] sm:h-[350px] bg-sky-400/10 blur-3xl rounded-full" />
+        <div className="absolute bottom-[10%] right-[-2%] w-[260px] sm:w-[400px] h-[260px] sm:h-[400px] bg-primary/15 blur-3xl rounded-full" />
         {/* Subtle dot pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(#5B3DF5_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.03] dark:opacity-[0.07]" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto px-4 sm:px-6 w-full max-w-full">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center"
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center w-full max-w-full"
         >
           {/* Left Hero Column */}
-          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+          <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-4 sm:space-y-6 w-full max-w-full">
             {/* Admissions Open & IIT Mentorship Badge */}
-            <motion.div variants={itemVariants}>
-              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-xs sm:text-sm font-black shadow-sm">
-                <Sparkles className="h-4 w-4 text-amber-500 shrink-0" />
-                <span>Admissions Open (Class 4th - 12th) • IIT Patna Guest Mentorship</span>
+            <motion.div variants={itemVariants} className="w-full max-w-full">
+              <div className="inline-flex flex-wrap items-center justify-center lg:justify-start gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/40 text-amber-900 dark:text-amber-200 text-[11px] sm:text-sm font-black shadow-sm max-w-full">
+                <Sparkles className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                <span className="break-words">Admissions Open (Class 4-12) • IIT Patna Scholars Mentorship</span>
               </div>
             </motion.div>
 
             {/* Online & Offline Badge */}
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="w-full max-w-full">
               <Badge
                 variant="outline"
-                className="px-3.5 py-1.5 rounded-full text-xs font-bold bg-primary/10 border-primary/30 text-primary flex items-center gap-1.5"
+                className="px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-bold bg-primary/10 border-primary/30 text-primary flex items-center justify-center lg:justify-start gap-1.5 max-w-full break-words"
               >
-                <CheckCircle2 className="h-4 w-4 text-primary" />
-                <span>Online & Offline Both Batches Available • Class 4th to 12th</span>
+                <CheckCircle2 className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span>Online & Offline Both Batches • Class 4th to 12th</span>
               </Badge>
             </motion.div>
 
             {/* Grand STA CLASSES Brand Title */}
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-3">
-              <span className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent drop-shadow-sm">
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 w-full max-w-full">
+              <span className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-700 bg-clip-text text-transparent drop-shadow-sm break-words">
                 STA CLASSES
               </span>
-              <span className="px-3.5 py-1 rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/30 text-blue-700 dark:text-blue-300 text-xs sm:text-sm font-black uppercase tracking-widest shadow-sm">
+              <span className="px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/30 text-blue-700 dark:text-blue-300 text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-sm">
                 Tuition Center • Barh
               </span>
             </motion.div>
@@ -94,7 +94,7 @@ export function HeroSection() {
             {/* Headline */}
             <motion.h1
               variants={itemVariants}
-              className="text-3xl sm:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.12] text-foreground"
+              className="text-2xl sm:text-4xl md:text-5xl xl:text-6xl font-extrabold tracking-tight leading-[1.18] sm:leading-[1.12] text-foreground break-words w-full"
             >
               {siteContent.hero.headline}{" "}
               <span className="bg-gradient-to-r from-primary via-violet-600 to-indigo-500 bg-clip-text text-transparent">
@@ -224,7 +224,7 @@ export function HeroSection() {
                   </div>
 
                   <div className="flex items-center justify-between text-[11px] text-slate-300">
-                    <span>Er. S. T. Agrawal</span>
+                    <span>STA Senior Faculty</span>
                     <span className="font-mono text-emerald-400 font-bold flex items-center gap-1">
                       <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                       120+ Students Live
